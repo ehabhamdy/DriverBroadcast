@@ -16,7 +16,6 @@
         android:layout_height="match_parent"
         map:cameraTargetLat="31.2001"
         map:cameraTargetLng="29.9187"
-        map:cameraTilt="65"
         map:cameraZoom="12"
         tools:context=".LocationBroadcastActivity" />
 

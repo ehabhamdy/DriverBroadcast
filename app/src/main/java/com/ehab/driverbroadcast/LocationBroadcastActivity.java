@@ -24,9 +24,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.PNCallback;
@@ -36,7 +40,11 @@ import com.pubnub.api.models.consumer.PNStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.google.android.gms.location.LocationServices.FusedLocationApi;
+
 public class LocationBroadcastActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, LocationListener, OnMapReadyCallback {
+
+    public static final String TAG = LocationBroadcastActivity.class.getName();
 
     private Switch mSwitcher;
     private GoogleMap mMap;
@@ -133,7 +141,12 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
             return;
         }
 
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleClientApi, mLocationRequest, this);
+        Location current = LocationServices.FusedLocationApi.getLastLocation(mGoogleClientApi);
+        LatLng latLng = new LatLng(current.getLatitude(), current.getLongitude());
+        CameraPosition cp = CameraPosition.builder().target(latLng).zoom(14).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
+
+        FusedLocationApi.requestLocationUpdates(mGoogleClientApi, mLocationRequest, this);
     }
 
     @Override
@@ -143,7 +156,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 
     private LocationRequest createLocationRequest() {
         LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
+        mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         return mLocationRequest;
@@ -221,6 +234,12 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        boolean success = mMap.setMapStyle(new MapStyleOptions(getResources().getString(R.string.style_json)));
+
+
+        if (!success) {
+            Log.e(TAG, "Style parsing failed.");
+        }
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -237,7 +256,11 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         }
         mMap.setMyLocationEnabled(true);
 
-
-
+        if(mGoogleClientApi.isConnected()) {
+            Location current = LocationServices.FusedLocationApi.getLastLocation(mGoogleClientApi);
+            LatLng latLng = new LatLng(current.getLatitude(), current.getLongitude());
+            CameraPosition cp = CameraPosition.builder().target(latLng).build();
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
+        }
     }
 }
