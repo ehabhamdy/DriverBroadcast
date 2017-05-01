@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -22,6 +24,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.PNCallback;
@@ -31,7 +35,11 @@ import com.pubnub.api.models.consumer.PNStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class LocationBroadcastActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, LocationListener {
+public class LocationBroadcastActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, LocationListener, OnMapReadyCallback {
+
+    private Switch mSwitcher;
+    private GoogleMap mMap;
+
 
     private GoogleApiClient mGoogleClientApi;
     private LocationRequest mLocationRequest;
@@ -69,12 +77,22 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
             }
         });
 
+        mSwitcher = (Switch) findViewById(R.id.switcher);
+        mSwitcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked)
+                    mGoogleClientApi.connect();
+                else
+                    mGoogleClientApi.disconnect();
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mGoogleClientApi.connect();
+        //mGoogleClientApi.connect();
     }
 
     @Override
@@ -193,5 +211,10 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                 }
             }
         });
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
     }
 }

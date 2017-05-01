@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Driver Broadcast</string>
     <string name="broadcast_button_text">Broadcast My Location</string>
+
+    <string name="loc_on_off_description">Location Tracking Switcher</string>
+    <string name="switcher_off_label">Disabled</string>
+    <string name="switcher_on_label">Enabled</string>
 </resources>
