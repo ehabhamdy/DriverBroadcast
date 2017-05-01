@@ -26,6 +26,7 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.PNCallback;
@@ -66,6 +67,10 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         PNConfiguration pnConfiguration = new PNConfiguration();
         pnConfiguration.setSubscribeKey(SUB_KEY);
         pnConfiguration.setPublishKey(PUB_KEY);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         mPubnub = new PubNub(pnConfiguration);
 
@@ -216,5 +221,23 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                ActivityCompat.requestPermissions(this,
+                        LOCATION_PERMS,
+                        LOCATION_REQUEST);
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        LOCATION_PERMS,
+                        LOCATION_REQUEST);
+            }
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+
+
+
     }
 }
