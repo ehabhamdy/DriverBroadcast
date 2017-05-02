@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="broadcast_button_text">ارسل مكاني الحالي</string>
-
+    <string name="switcher_off_label">مفعل</string>
+    <string name="switcher_on_label">غير مفعل</string>
 </resources>
