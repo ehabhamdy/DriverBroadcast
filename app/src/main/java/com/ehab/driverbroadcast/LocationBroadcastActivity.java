@@ -1,8 +1,11 @@
 package com.ehab.driverbroadcast;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -90,16 +93,29 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
             }
         });
 
+        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
         mSwitcher = (Switch) findViewById(R.id.switcher);
         mSwitcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if(isChecked)
-                    mGoogleClientApi.connect();
+                    if ( manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                        mGoogleClientApi.connect();
+                    } else{
+                        Toast.makeText(LocationBroadcastActivity.this, "Enabling GPS is MANDATORY", Toast.LENGTH_SHORT).show();
+                        mSwitcher.setChecked(false);
+                        askForGPS2();
+                    }
                 else
                     mGoogleClientApi.disconnect();
             }
         });
+    }
+
+    private void askForGPS2() {
+        Intent gpsOptionsIntent = new Intent(
+                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(gpsOptionsIntent);
     }
 
     @Override
@@ -141,11 +157,13 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
             return;
         }
 
-        Location current = LocationServices.FusedLocationApi.getLastLocation(mGoogleClientApi);
-        LatLng latLng = new LatLng(current.getLatitude(), current.getLongitude());
-        CameraPosition cp = CameraPosition.builder().target(latLng).zoom(14).build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
+       /* Location current = LocationServices.FusedLocationApi.getLastLocation(mGoogleClientApi);
 
+        if(current != null) {
+            LatLng latLng = new LatLng(current.getLatitude(), current.getLongitude());
+            CameraPosition cp = CameraPosition.builder().target(latLng).zoom(16).build();
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
+        }*/
         FusedLocationApi.requestLocationUpdates(mGoogleClientApi, mLocationRequest, this);
     }
 
@@ -156,8 +174,8 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 
     private LocationRequest createLocationRequest() {
         LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(1000);
-        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(4000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         return mLocationRequest;
     }
@@ -166,6 +184,9 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     public void onLocationChanged(Location location) {
         Log.d("Location Update", "Latitude: " + location.getLatitude() +
                 " Longitude: " + location.getLongitude());
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        CameraPosition cp = CameraPosition.builder().target(latLng).zoom(16).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
         broadcastLocation(location);
     }
 
