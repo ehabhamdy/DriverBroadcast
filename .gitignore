@@ -10,5 +10,5 @@
 .idea
 gradle.properties
 /app/src/main/res/values/google_maps_api.xml
-/app/src/release
-/app/src/debug
+/app/src/release/res/values/google_maps_api.xml
+/app/src/debug/res/values/google_maps_api.xml
