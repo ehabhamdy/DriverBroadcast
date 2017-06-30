@@ -59,6 +59,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 
     private PubNub mPubnub;
 
+    //TODO: Add the appropriate api keys for the pubnub service
     public static final String SUB_KEY = BuildConfig.SUB_KEY;
     public static final String PUB_KEY = BuildConfig.PUB_KEY;
 
