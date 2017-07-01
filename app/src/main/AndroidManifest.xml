@@ -13,13 +13,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".LocationBroadcastActivity">
+        <activity
+            android:name=".ui.ActivitySplash"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.ActivityLogin" />
+        <activity android:name=".ui.ActivitySignUp" />
+        <activity android:name=".ui.LocationBroadcastActivity"></activity>
         <!--TODO: Add your Google Maps api key-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"

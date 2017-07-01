@@ -5,4 +5,13 @@
     <string name="loc_on_off_description" translatable="false">Location Tracking Switcher</string>
     <string name="switcher_off_label">Disabled</string>
     <string name="switcher_on_label">Enabled</string>
+
+    <string name="password_hint">Password</string>
+    <string name="username_hint">Username</string>
+    <string name="email_hint">Email</string>
+    <string name="signup">Sign Up Now</string>
+    <string name="login">Login</string>
+    <string name="sign_up_hint">Sign Up</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_logout">Logout</string>
 </resources>

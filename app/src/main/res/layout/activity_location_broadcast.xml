@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.ehab.driverbroadcast.LocationBroadcastActivity">
+    tools:context="com.ehab.driverbroadcast.ui.LocationBroadcastActivity">
 
     <include layout="@layout/toolbar" />
 
@@ -17,7 +17,7 @@
         map:cameraTargetLat="31.2001"
         map:cameraTargetLng="29.9187"
         map:cameraZoom="12"
-        tools:context=".LocationBroadcastActivity" />
+        tools:context=".ui.LocationBroadcastActivity" />
 
     <LinearLayout
         android:layout_width="match_parent"

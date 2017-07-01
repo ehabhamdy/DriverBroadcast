@@ -1,4 +1,4 @@
-package com.ehab.driverbroadcast;
+package com.ehab.driverbroadcast.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +17,8 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.ehab.driverbroadcast.BuildConfig;
+import com.ehab.driverbroadcast.R;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
