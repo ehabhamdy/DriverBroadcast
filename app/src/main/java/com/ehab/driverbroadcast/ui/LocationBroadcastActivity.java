@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +37,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.PNCallback;
@@ -53,8 +64,6 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 
     private Switch mSwitcher;
     private GoogleMap mMap;
-
-
     private GoogleApiClient mGoogleClientApi;
     private LocationRequest mLocationRequest;
     PendingResult<LocationSettingsResult> result;
@@ -75,6 +84,10 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_broadcast);
+
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         this.buildGoogleApiClient();
 
@@ -113,6 +126,63 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                     mGoogleClientApi.disconnect();
             }
         });
+
+        //Setting up Navigation Drawer
+        String username = "ehabhamdy";
+        String email = "ehabhamdy2012@gmail.com";
+        SetupNavigationDrawer(mToolbar, username, email);
+
+
+    }
+
+    private void SetupNavigationDrawer(Toolbar mToolbar, String username, String email) {
+        // Create the AccountHeader
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withHeaderBackground(R.drawable.drawer_bg)
+                .addProfiles(
+                        new ProfileDrawerItem().withName(username).withEmail(email).withIcon(getResources().getDrawable(R.drawable.toobar_icon))
+                )
+                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+                    @Override
+                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+                        return false;
+                    }
+                })
+                .build();
+
+        //new DrawerBuilder().withActivity(this).withAccountHeader(headerResult).build();
+
+        //if you want to update the items at a later time it is recommended to keep it in a variable
+        PrimaryDrawerItem main = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.nav_main_label).withIcon(R.drawable.ic_room_black_24dp);
+        PrimaryDrawerItem subsToLine = new PrimaryDrawerItem().withIdentifier(2).withName(R.string.nav_subscribe_label).withIcon(R.drawable.ic_trending_up_black_24dp);
+        PrimaryDrawerItem profile = new PrimaryDrawerItem().withIdentifier(3).withName(R.string.nav_profile_label).withIcon(R.drawable.ic_person_black_24dp);
+        PrimaryDrawerItem settings = new PrimaryDrawerItem().withIdentifier(4).withName(R.string.nav_settings_label).withIcon(R.drawable.ic_settings_black_24dp);
+        PrimaryDrawerItem logout = new PrimaryDrawerItem().withIdentifier(5).withName(R.string.nav_logout_label).withIcon(R.drawable.ic_out_black_24dp);
+        //create the drawer and remember the `Drawer` result object
+        Drawer result = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(mToolbar)
+                .addDrawerItems(
+                        main,
+                        new DividerDrawerItem(),
+                        subsToLine,
+                        new DividerDrawerItem(),
+                        profile,
+                        new DividerDrawerItem(),
+                        settings,
+                        new DividerDrawerItem(),
+                        logout)
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        // do something with the clicked item :D
+                        Toast.makeText(LocationBroadcastActivity.this, "sdf", Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                })
+                .withAccountHeader(headerResult)
+                .build();
     }
 
     private void askForGPS2() {
@@ -124,7 +194,6 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     @Override
     protected void onStart() {
         super.onStart();
-        //mGoogleClientApi.connect();
     }
 
     @Override

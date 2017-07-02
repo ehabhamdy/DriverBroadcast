@@ -14,4 +14,9 @@
     <string name="sign_up_hint">Sign Up</string>
     <string name="menu_profile">Profile</string>
     <string name="menu_logout">Logout</string>
+    <string name="nav_main_label">Main</string>
+    <string name="nav_subscribe_label">Subscribe to line</string>
+    <string name="nav_profile_label">Profile</string>
+    <string name="nav_settings_label">Settings</string>
+    <string name="nav_logout_label">Logout</string>
 </resources>
