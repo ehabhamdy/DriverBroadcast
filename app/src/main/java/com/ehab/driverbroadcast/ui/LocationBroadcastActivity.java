@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.ehab.driverbroadcast.BuildConfig;
 import com.ehab.driverbroadcast.R;
+import com.ehab.driverbroadcast.model.User;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -37,6 +39,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -62,6 +71,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 
     public static final String TAG = LocationBroadcastActivity.class.getName();
 
+    Toolbar mToolbar;
     private Switch mSwitcher;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleClientApi;
@@ -80,12 +90,22 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     private static final int LOCATION_REQUEST = 50;
 
 
+    FirebaseUser currentUser;
+    String userId;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mUsersReference;
+    String username;
+    String email;
+
+    Drawer drawer;
+    AccountHeader headerResult;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_broadcast);
 
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -120,6 +140,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                     } else{
                         Toast.makeText(LocationBroadcastActivity.this, "Enabling GPS is MANDATORY", Toast.LENGTH_SHORT).show();
                         mSwitcher.setChecked(false);
+                        mSwitcher.setChecked(false);
                         askForGPS2();
                     }
                 else
@@ -127,17 +148,47 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
             }
         });
 
-        //Setting up Navigation Drawer
-        String username = "ehabhamdy";
-        String email = "ehabhamdy2012@gmail.com";
-        SetupNavigationDrawer(mToolbar, username, email);
+        //retrieve user data from firebase
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        userId = currentUser.getUid();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mUsersReference = mFirebaseDatabase.getReference().child("users");
 
+        mUsersReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                username = user.username;
+                email = user.email;
+
+/*
+                if(user.photoUrl == null)
+                    mProfileImageView.setImageResource(R.drawable.default_thumbnail);
+                else
+                    Glide.with(mProfileImageView.getContext()).load(user.photoUrl).into(mProfileImageView);
+*/
+                //headerResult.updateProfileByIdentifier(new ProfileDrawerItem().withName(username));
+
+                SetupNavigationDrawer(mToolbar, username, email);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+
+        //Setting up Navigation Drawer
+        email = "ehabhamdy2012@gmail.com";
+        SetupNavigationDrawer(mToolbar, username, email);
 
     }
 
     private void SetupNavigationDrawer(Toolbar mToolbar, String username, String email) {
         // Create the AccountHeader
-        AccountHeader headerResult = new AccountHeaderBuilder()
+        headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.drawer_bg)
                 .addProfiles(
@@ -160,7 +211,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         PrimaryDrawerItem settings = new PrimaryDrawerItem().withIdentifier(4).withName(R.string.nav_settings_label).withIcon(R.drawable.ic_settings_black_24dp);
         PrimaryDrawerItem logout = new PrimaryDrawerItem().withIdentifier(5).withName(R.string.nav_logout_label).withIcon(R.drawable.ic_out_black_24dp);
         //create the drawer and remember the `Drawer` result object
-        Drawer result = new DrawerBuilder()
+        drawer = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(mToolbar)
                 .addDrawerItems(
@@ -177,12 +228,34 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         // do something with the clicked item :D
-                        Toast.makeText(LocationBroadcastActivity.this, "sdf", Toast.LENGTH_SHORT).show();
+                        switch (position) {
+                            case 1:
+                                drawer.closeDrawer();
+                                return true;
+                            case 3:
+                                Toast.makeText(LocationBroadcastActivity.this, "lines", Toast.LENGTH_SHORT).show();
+                                return true;
+                            case 5:
+                                break;
+                            case 7:
+                                break;
+                            case 9:
+                                FirebaseAuth.getInstance().signOut();
+                                Intent intent = new Intent(getApplicationContext(), ActivityLogin.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                        }
+
+
                         return true;
                     }
                 })
                 .withAccountHeader(headerResult)
                 .build();
+
+
     }
 
     private void askForGPS2() {

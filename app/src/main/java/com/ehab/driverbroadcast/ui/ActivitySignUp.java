@@ -82,7 +82,7 @@ public class ActivitySignUp extends ActivityBase {
 
     }
 
-    public void signUp(final String username, String email, String password) {
+    public void signUp(final String username, final String email, String password) {
 
         //Check if the email or password fields are empty
         if (!validateForm()) {
@@ -100,7 +100,7 @@ public class ActivitySignUp extends ActivityBase {
                         hideProgressDialog();
 
                         if (task.isSuccessful()) {
-                            onAuthSuccess(task.getResult().getUser(), username);
+                            onAuthSuccess(task.getResult().getUser(), username, email);
                             FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification();
 
                         } else {
@@ -129,11 +129,11 @@ public class ActivitySignUp extends ActivityBase {
         return result;
     }
 
-    private void onAuthSuccess(FirebaseUser user, String username) {
+    private void onAuthSuccess(FirebaseUser user, String username, String email) {
         //String username = usernameFromEmail(user.getEmail());
 
         // Write new user
-        writeNewUser(user.getUid(), username);
+        writeNewUser(user.getUid(), username, email);
 
         // Go to MainActivity
 //        Intent intent = new Intent(getActivity(), ActivityUserMain.class);
@@ -151,8 +151,8 @@ public class ActivitySignUp extends ActivityBase {
     }
 
     // [START basic_write]
-    private void writeNewUser(String userId, String name) {
-        User user = new User(name);
+    private void writeNewUser(String userId, String name, String email) {
+        User user = new User(name, email);
 
         mDatabase.child("users").child(userId).setValue(user);
     }
