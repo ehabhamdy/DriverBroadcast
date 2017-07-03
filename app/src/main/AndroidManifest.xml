@@ -12,7 +12,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".ui.ActivitySplash"
             android:theme="@style/SplashTheme">
@@ -24,11 +23,13 @@
         </activity>
         <activity android:name=".ui.ActivityLogin" />
         <activity android:name=".ui.ActivitySignUp" />
-        <activity android:name=".ui.LocationBroadcastActivity"></activity>
-        <!--TODO: Add your Google Maps api key-->
+        <activity android:name=".ui.LocationBroadcastActivity" />
+        <!-- TODO: Add your Google Maps api key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
+        <activity android:name=".ui.ProfileActivity"></activity>
     </application>
 
 </manifest>

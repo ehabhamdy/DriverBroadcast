@@ -236,7 +236,9 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                                 Toast.makeText(LocationBroadcastActivity.this, "lines", Toast.LENGTH_SHORT).show();
                                 return true;
                             case 5:
-                                break;
+                                Intent openProfileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+                                startActivity(openProfileIntent);
+                                return true;
                             case 7:
                                 break;
                             case 9:
