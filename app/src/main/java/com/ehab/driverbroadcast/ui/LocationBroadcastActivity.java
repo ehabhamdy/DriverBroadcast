@@ -3,11 +3,11 @@ package com.ehab.driverbroadcast.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.ehab.driverbroadcast.BuildConfig;
 import com.ehab.driverbroadcast.R;
-import com.ehab.driverbroadcast.model.User;
+import com.ehab.driverbroadcast.model.Driver;
 import com.ehab.driverbroadcast.utils.NavigationDrawerUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -47,16 +47,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mikepenz.materialdrawer.AccountHeader;
-import com.mikepenz.materialdrawer.AccountHeaderBuilder;
-import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.PNCallback;
@@ -68,7 +59,10 @@ import org.json.JSONObject;
 
 import static com.google.android.gms.location.LocationServices.FusedLocationApi;
 
-public class LocationBroadcastActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, LocationListener, OnMapReadyCallback {
+public class LocationBroadcastActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+                                                                            LocationListener,
+                                                                            OnMapReadyCallback,
+                                                                            SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final String TAG = LocationBroadcastActivity.class.getName();
 
@@ -157,12 +151,12 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         userId = currentUser.getUid();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mUsersReference = mFirebaseDatabase.getReference().child("users");
+        mUsersReference = mFirebaseDatabase.getReference().child("drivers");
 
         mUsersReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
+                Driver user = dataSnapshot.getValue(Driver.class);
                 username = user.username;
                 email = user.email;
 
@@ -187,8 +181,8 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 
         //Setting up Navigation Drawer
         email = "ehabhamdy2012@gmail.com";
-        drawerUtil.SetupNavigationDrawer(mToolbar, this, username, email);
-
+        //drawerUtil.SetupNavigationDrawer(mToolbar, this, username, email);
+        new DrawerBuilder().withActivity(this).build();
     }
 
     @Override
@@ -444,5 +438,10 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
             CameraPosition cp = CameraPosition.builder().target(latLng).build();
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
         }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
     }
 }
