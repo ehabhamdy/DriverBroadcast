@@ -28,7 +28,7 @@ public class ActivitySplash extends ActivityBase {
                 startActivity(intent);
                 overridePendingTransition(0,0);
             } else {
-                // User signed out or No Network Connection
+                // Driver signed out or No Network Connection
                 Intent intent = new Intent(ActivitySplash.this, ActivityLogin.class);
 
                 //Removing HomeActivity from the back stack

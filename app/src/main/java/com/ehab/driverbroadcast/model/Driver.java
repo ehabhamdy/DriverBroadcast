@@ -8,21 +8,23 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 
 @IgnoreExtraProperties
-public class User {
+public class Driver {
 
     public String username;
     public String email;
+    public String line;
 
 
-    public User() {
-        // Default constructor required for calls to DataSnapshot.getValue(User.class)
+    public Driver() {
+        // Default constructor required for calls to DataSnapshot.getValue(Driver.class)
     }
 
-    public User(String username) {
+    public Driver(String username) {
         this.username = username;
     }
-    public User(String username, String email) {
+    public Driver(String username, String email, String line) {
         this.username = username;
         this.email = email;
+        this.line = line;
     }
 }

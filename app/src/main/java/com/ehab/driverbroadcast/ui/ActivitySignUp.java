@@ -2,7 +2,6 @@ package com.ehab.driverbroadcast.ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
@@ -14,7 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ehab.driverbroadcast.model.User;
+import com.ehab.driverbroadcast.model.Driver;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -39,6 +38,7 @@ public class ActivitySignUp extends ActivityBase {
 
     private ProgressDialog mProgressDialog;
 
+    String defaultLine = "miami-bahary";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,7 @@ public class ActivitySignUp extends ActivityBase {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         TextView tv = (TextView) mToolbar.findViewById(R.id.toolbar_title);
-        tv.setText("Sign Up");
+        tv.setText(R.string.signup_activity_title);
         //Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/VarelaRound-Regular.ttf");
         //tv.setTypeface(custom_font);
 
@@ -152,9 +152,9 @@ public class ActivitySignUp extends ActivityBase {
 
     // [START basic_write]
     private void writeNewUser(String userId, String name, String email) {
-        User user = new User(name, email);
+        Driver driver = new Driver(name, email, defaultLine);
 
-        mDatabase.child("users").child(userId).setValue(user);
+        mDatabase.child("drivers").child(userId).setValue(driver);
     }
     // [END basic_write]
 

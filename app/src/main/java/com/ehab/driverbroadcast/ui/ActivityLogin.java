@@ -1,8 +1,6 @@
 package com.ehab.driverbroadcast.ui;
 
-import android.content.BroadcastReceiver;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
@@ -18,14 +16,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import com.ehab.driverbroadcast.R;
-import com.ehab.driverbroadcast.model.User;
 
 
 public class ActivityLogin extends ActivityBase {
@@ -48,7 +42,7 @@ public class ActivityLogin extends ActivityBase {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         TextView tv = (TextView) mToolbar.findViewById(R.id.toolbar_title);
-        tv.setText("Login");
+        tv.setText(R.string.login_activity_title);
         //Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/VarelaRound-Regular.ttf");
         //tv.setTypeface(custom_font);
 
