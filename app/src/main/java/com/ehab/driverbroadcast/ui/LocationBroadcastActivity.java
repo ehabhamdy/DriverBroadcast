@@ -80,6 +80,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     PendingResult<LocationSettingsResult> result;
 
     private PubNub mPubnub;
+    String lineChannel;
 
     //TODO: Add the appropriate api keys for the pubnub service
     public static final String SUB_KEY = BuildConfig.SUB_KEY;
@@ -114,6 +115,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 
         this.buildGoogleApiClient();
 
+        lineChannel = "awesome-channel";
         PNConfiguration pnConfiguration = new PNConfiguration();
         pnConfiguration.setSubscribeKey(SUB_KEY);
         pnConfiguration.setPublishKey(PUB_KEY);
@@ -346,7 +348,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         CameraPosition cp = CameraPosition.builder().target(latLng).zoom(16).build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
-        broadcastLocation(location);
+        broadcastLocation(location, lineChannel);
     }
 
     @Override
@@ -360,7 +362,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 
     }
 
-    private void broadcastLocation(Location location) {
+    private void broadcastLocation(Location location, String channel) {
         JSONObject message = new JSONObject();
         try {
             message.put("lat", location.getLatitude());
@@ -372,7 +374,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         Toast.makeText(this, "Sent", Toast.LENGTH_SHORT).show();
         mPubnub.publish()
                 .message(message)
-                .channel("awesome-channel")
+                .channel(channel)
                 .async(new PNCallback<PNPublishResult>() {
                     @Override
                     public void onResponse(PNPublishResult result, PNStatus status) {

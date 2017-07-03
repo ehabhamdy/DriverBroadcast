@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.ehab.driverbroadcast.R;
 import com.ehab.driverbroadcast.ui.ActivityLogin;
+import com.ehab.driverbroadcast.ui.LineSubscriptionActivity;
 import com.ehab.driverbroadcast.ui.LocationBroadcastActivity;
 import com.ehab.driverbroadcast.ui.ProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -83,7 +84,9 @@ public class NavigationDrawerUtil {
                                 drawer.closeDrawer();
                                 return true;
                             case 3:
-                                Toast.makeText(activity, "lines", Toast.LENGTH_SHORT).show();
+                                Intent openSubscriptionIntent = new Intent(activity.getApplicationContext(), LineSubscriptionActivity.class);
+                                activity.startActivity(openSubscriptionIntent);
+                                drawer.closeDrawer();
                                 return true;
                             case 5:
                                 Intent openProfileIntent = new Intent(activity.getApplicationContext(), ProfileActivity.class);
