@@ -30,7 +30,7 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".ui.ProfileActivity" />
-        <activity android:name=".ui.LineSubscriptionActivity"></activity>
+        <activity android:name=".ui.LineSubscriptionActivity" android:parentActivityName=".ui.LocationBroadcastActivity"></activity>
     </application>
 
 </manifest>

@@ -20,6 +20,7 @@ public class LineSubscriptionActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.login_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         TextView tv = (TextView) mToolbar.findViewById(R.id.toolbar_title);
         tv.setText("Subscribe to line");

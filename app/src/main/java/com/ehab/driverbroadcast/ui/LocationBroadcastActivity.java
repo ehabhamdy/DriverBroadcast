@@ -61,8 +61,7 @@ import static com.google.android.gms.location.LocationServices.FusedLocationApi;
 
 public class LocationBroadcastActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
                                                                             LocationListener,
-                                                                            OnMapReadyCallback,
-                                                                            SharedPreferences.OnSharedPreferenceChangeListener {
+                                                                            OnMapReadyCallback{
 
     public static final String TAG = LocationBroadcastActivity.class.getName();
 
@@ -153,12 +152,16 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mUsersReference = mFirebaseDatabase.getReference().child("drivers");
 
-        mUsersReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+        // addValueEventListener will always listen for changes so if the user update his profile or
+        // change subscription line every thing will be updated properly in thins activity
+        mUsersReference.child(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Driver user = dataSnapshot.getValue(Driver.class);
                 username = user.username;
                 email = user.email;
+                lineChannel = user.line;
+
 
 /*
                 if(user.photoUrl == null)
@@ -194,80 +197,6 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         }
     }
 
-    /*private void SetupNavigationDrawer(Toolbar mToolbar, String username, String email) {
-        // Create the AccountHeader
-        headerResult = new AccountHeaderBuilder()
-                .withActivity(this)
-                .withHeaderBackground(R.drawable.drawer_bg)
-                .addProfiles(
-                        new ProfileDrawerItem().withName(username).withEmail(email).withIcon(getResources().getDrawable(R.drawable.toobar_icon))
-                )
-                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
-                    @Override
-                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
-                        return false;
-                    }
-                })
-                .build();
-
-        //new DrawerBuilder().withActivity(this).withAccountHeader(headerResult).build();
-
-        //if you want to update the items at a later time it is recommended to keep it in a variable
-        PrimaryDrawerItem main = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.nav_main_label).withIcon(R.drawable.ic_room_black_24dp);
-        PrimaryDrawerItem subsToLine = new PrimaryDrawerItem().withIdentifier(2).withName(R.string.nav_subscribe_label).withIcon(R.drawable.ic_trending_up_black_24dp);
-        PrimaryDrawerItem profile = new PrimaryDrawerItem().withIdentifier(3).withName(R.string.nav_profile_label).withIcon(R.drawable.ic_person_black_24dp);
-        PrimaryDrawerItem settings = new PrimaryDrawerItem().withIdentifier(4).withName(R.string.nav_settings_label).withIcon(R.drawable.ic_settings_black_24dp);
-        PrimaryDrawerItem logout = new PrimaryDrawerItem().withIdentifier(5).withName(R.string.nav_logout_label).withIcon(R.drawable.ic_out_black_24dp);
-        //create the drawer and remember the `Drawer` result object
-        drawer = new DrawerBuilder()
-                .withActivity(this)
-                .withToolbar(mToolbar)
-                .addDrawerItems(
-                        main,
-                        new DividerDrawerItem(),
-                        subsToLine,
-                        new DividerDrawerItem(),
-                        profile,
-                        new DividerDrawerItem(),
-                        settings,
-                        new DividerDrawerItem(),
-                        logout)
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        // do something with the clicked item :D
-                        switch (position) {
-                            case 1:
-                                drawer.closeDrawer();
-                                return true;
-                            case 3:
-                                Toast.makeText(LocationBroadcastActivity.this, "lines", Toast.LENGTH_SHORT).show();
-                                return true;
-                            case 5:
-                                Intent openProfileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
-                                startActivity(openProfileIntent);
-                                return true;
-                            case 7:
-                                break;
-                            case 9:
-                                FirebaseAuth.getInstance().signOut();
-                                Intent intent = new Intent(getApplicationContext(), ActivityLogin.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                                finish();
-                        }
-
-
-                        return true;
-                    }
-                })
-                .withAccountHeader(headerResult)
-                .build();
-
-
-    }*/
-
     private void askForGPS2() {
         Intent gpsOptionsIntent = new Intent(
                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -281,10 +210,14 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 
     @Override
     protected void onStop() {
-        mGoogleClientApi.disconnect();
         super.onStop();
     }
 
+    @Override
+    protected void onDestroy() {
+        mGoogleClientApi.disconnect();
+        super.onDestroy();
+    }
 
     private synchronized void buildGoogleApiClient() {
         mGoogleClientApi = new GoogleApiClient.Builder(this)
@@ -440,8 +373,5 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         }
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-    }
 }
