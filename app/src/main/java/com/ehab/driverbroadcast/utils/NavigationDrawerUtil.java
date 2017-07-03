@@ -30,6 +30,10 @@ public class NavigationDrawerUtil {
     Drawer drawer;
     AccountHeader headerResult;
 
+    public Drawer getDrawer() {
+        return drawer;
+    }
+
     public Drawer SetupNavigationDrawer(Toolbar mToolbar, final Activity activity , String username, String email) {
         // Create the AccountHeader
 
@@ -84,6 +88,7 @@ public class NavigationDrawerUtil {
                             case 5:
                                 Intent openProfileIntent = new Intent(activity.getApplicationContext(), ProfileActivity.class);
                                 activity.startActivity(openProfileIntent);
+                                drawer.closeDrawer();
                                 return true;
                             case 7:
                                 break;

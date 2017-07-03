@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.ehab.driverbroadcast.BuildConfig;
 import com.ehab.driverbroadcast.R;
 import com.ehab.driverbroadcast.model.User;
+import com.ehab.driverbroadcast.utils.NavigationDrawerUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -97,8 +98,10 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     String username;
     String email;
 
-    Drawer drawer;
-    AccountHeader headerResult;
+    //Drawer drawer;
+    //AccountHeader headerResult;
+
+    NavigationDrawerUtil drawerUtil = new NavigationDrawerUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +172,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 */
                 //headerResult.updateProfileByIdentifier(new ProfileDrawerItem().withName(username));
 
-                SetupNavigationDrawer(mToolbar, username, email);
+                drawerUtil.SetupNavigationDrawer(mToolbar, LocationBroadcastActivity.this ,username, email);
 
             }
 
@@ -182,11 +185,20 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 
         //Setting up Navigation Drawer
         email = "ehabhamdy2012@gmail.com";
-        SetupNavigationDrawer(mToolbar, username, email);
+        drawerUtil.SetupNavigationDrawer(mToolbar, this, username, email);
 
     }
 
-    private void SetupNavigationDrawer(Toolbar mToolbar, String username, String email) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(drawerUtil.getDrawer() != null) {
+            drawerUtil.getDrawer().setSelection(1);
+            drawerUtil.getDrawer().closeDrawer();
+        }
+    }
+
+    /*private void SetupNavigationDrawer(Toolbar mToolbar, String username, String email) {
         // Create the AccountHeader
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -258,7 +270,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                 .build();
 
 
-    }
+    }*/
 
     private void askForGPS2() {
         Intent gpsOptionsIntent = new Intent(
