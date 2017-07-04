@@ -373,5 +373,14 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (drawerUtil.getDrawer().isDrawerOpen()) {
+            drawerUtil.getDrawer().closeDrawer();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 
 }
