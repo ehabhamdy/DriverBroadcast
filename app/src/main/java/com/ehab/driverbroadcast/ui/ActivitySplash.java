@@ -15,7 +15,7 @@ public class ActivitySplash extends ActivityBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_splash);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (user != null) {
@@ -24,9 +24,9 @@ public class ActivitySplash extends ActivityBase {
                 Intent intent = new Intent(ActivitySplash.this, LocationBroadcastActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
-                overridePendingTransition(0,0);
+                //overridePendingTransition(0,0);
             } else {
                 // Driver signed out or No Network Connection
                 Intent intent = new Intent(ActivitySplash.this, ActivityLogin.class);

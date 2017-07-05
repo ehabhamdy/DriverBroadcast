@@ -171,7 +171,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 */
                 //headerResult.updateProfileByIdentifier(new ProfileDrawerItem().withName(username));
 
-                drawerUtil.SetupNavigationDrawer(mToolbar, LocationBroadcastActivity.this ,username, email);
+                drawerUtil.SetupNavigationDrawer(mToolbar, LocationBroadcastActivity.this ,username, email, lineChannel);
 
             }
 
@@ -185,7 +185,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         //Setting up Navigation Drawer
         email = "ehabhamdy2012@gmail.com";
         //drawerUtil.SetupNavigationDrawer(mToolbar, this, username, email);
-        new DrawerBuilder().withActivity(this).build();
+        new DrawerBuilder().withActivity(this).withToolbar(mToolbar).build();
     }
 
     @Override
@@ -375,7 +375,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 
     @Override
     public void onBackPressed() {
-        if (drawerUtil.getDrawer().isDrawerOpen()) {
+        if (drawerUtil.getDrawer() != null && drawerUtil.getDrawer().isDrawerOpen()) {
             drawerUtil.getDrawer().closeDrawer();
         } else {
             super.onBackPressed();

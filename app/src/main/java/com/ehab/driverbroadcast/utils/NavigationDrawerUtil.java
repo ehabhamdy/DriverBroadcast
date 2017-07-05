@@ -31,11 +31,13 @@ public class NavigationDrawerUtil {
     Drawer drawer;
     AccountHeader headerResult;
 
+    public static final String  SUB_LINE_EXTRA = "Line_Extra_Data";
+
     public Drawer getDrawer() {
         return drawer;
     }
 
-    public Drawer SetupNavigationDrawer(Toolbar mToolbar, final Activity activity , String username, String email) {
+    public Drawer SetupNavigationDrawer(Toolbar mToolbar, final Activity activity , String username, String email, final String line) {
         // Create the AccountHeader
 
 
@@ -59,7 +61,6 @@ public class NavigationDrawerUtil {
         PrimaryDrawerItem main = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.nav_main_label).withIcon(R.drawable.ic_room_black_24dp);
         PrimaryDrawerItem subsToLine = new PrimaryDrawerItem().withIdentifier(2).withName(R.string.nav_subscribe_label).withIcon(R.drawable.ic_trending_up_black_24dp);
         PrimaryDrawerItem profile = new PrimaryDrawerItem().withIdentifier(3).withName(R.string.nav_profile_label).withIcon(R.drawable.ic_person_black_24dp);
-        PrimaryDrawerItem settings = new PrimaryDrawerItem().withIdentifier(4).withName(R.string.nav_settings_label).withIcon(R.drawable.ic_settings_black_24dp);
         PrimaryDrawerItem logout = new PrimaryDrawerItem().withIdentifier(5).withName(R.string.nav_logout_label).withIcon(R.drawable.ic_out_black_24dp);
         //create the drawer and remember the `Drawer` result object
         drawer = new DrawerBuilder()
@@ -72,8 +73,6 @@ public class NavigationDrawerUtil {
                         new DividerDrawerItem(),
                         profile,
                         new DividerDrawerItem(),
-                        settings,
-                        new DividerDrawerItem(),
                         logout)
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -85,6 +84,7 @@ public class NavigationDrawerUtil {
                                 return true;
                             case 3:
                                 Intent openSubscriptionIntent = new Intent(activity.getApplicationContext(), LineSubscriptionActivity.class);
+                                openSubscriptionIntent.putExtra(SUB_LINE_EXTRA, line);
                                 activity.startActivity(openSubscriptionIntent);
                                 drawer.closeDrawer();
                                 return true;
