@@ -94,14 +94,14 @@ public class NavigationDrawerUtil {
                                 drawer.closeDrawer();
                                 return true;
                             case 7:
-                                break;
-                            case 9:
                                 FirebaseAuth.getInstance().signOut();
                                 Intent intent = new Intent(activity.getApplicationContext(), ActivityLogin.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 activity.startActivity(intent);
                                 activity.finish();
+                                break;
+
                         }
 
 
