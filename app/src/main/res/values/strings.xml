@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Driver Broadcast</string>
+    <string name="app_name" translatable="false">Rakabny Driver</string>
     <string name="broadcast_button_text">Broadcast My Location</string>
 
     <string name="loc_on_off_description" translatable="false">Location Tracking Switcher</string>
