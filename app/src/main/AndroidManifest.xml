@@ -12,18 +12,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".ui.ActivitySplash"
-            android:theme="@style/SplashTheme">
+        <activity android:name=".ui.ActivityLogin" />
+        <activity android:name=".ui.ActivitySignUp" />
+        <activity android:name=".ui.LocationBroadcastActivity" android:theme="@style/MainActivityTheme">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity android:name=".ui.ActivityLogin" />
-        <activity android:name=".ui.ActivitySignUp" />
-        <activity android:name=".ui.LocationBroadcastActivity" android:theme="@style/MainActivityTheme" />
         <!-- TODO: Add your Google Maps api key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"

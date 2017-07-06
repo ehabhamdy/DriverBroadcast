@@ -102,65 +102,72 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_broadcast);
 
-        mToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        this.buildGoogleApiClient();
+        ////////////////////////////////////////////////////////////////
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        lineChannel = "awesome-channel";
-        PNConfiguration pnConfiguration = new PNConfiguration();
-        pnConfiguration.setSubscribeKey(SUB_KEY);
-        pnConfiguration.setPublishKey(PUB_KEY);
+        if (user != null) {
+            if (user.isEmailVerified()) {
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+                mToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+                setSupportActionBar(mToolbar);
+                getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        mPubnub = new PubNub(pnConfiguration);
+                this.buildGoogleApiClient();
 
-        Button finishBtn = (Button) findViewById(R.id.finishBtn);
-        finishBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+                lineChannel = "awesome-channel";
+                PNConfiguration pnConfiguration = new PNConfiguration();
+                pnConfiguration.setSubscribeKey(SUB_KEY);
+                pnConfiguration.setPublishKey(PUB_KEY);
 
-        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
-        mSwitcher = (Switch) findViewById(R.id.switcher);
-        mSwitcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if(isChecked)
-                    if ( manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-                        mGoogleClientApi.connect();
-                    } else{
-                        Toast.makeText(LocationBroadcastActivity.this, "Enabling GPS is MANDATORY", Toast.LENGTH_SHORT).show();
-                        mSwitcher.setChecked(false);
-                        mSwitcher.setChecked(false);
-                        askForGPS2();
+                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.map);
+                mapFragment.getMapAsync(this);
+
+                mPubnub = new PubNub(pnConfiguration);
+
+                Button finishBtn = (Button) findViewById(R.id.finishBtn);
+                finishBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        finish();
                     }
-                else
-                    mGoogleClientApi.disconnect();
-            }
-        });
+                });
 
-        //retrieve user data from firebase
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        userId = currentUser.getUid();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mUsersReference = mFirebaseDatabase.getReference().child("drivers");
+                final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+                mSwitcher = (Switch) findViewById(R.id.switcher);
+                mSwitcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if(isChecked)
+                            if ( manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                                mGoogleClientApi.connect();
+                            } else{
+                                Toast.makeText(LocationBroadcastActivity.this, "Enabling GPS is MANDATORY", Toast.LENGTH_SHORT).show();
+                                mSwitcher.setChecked(false);
+                                mSwitcher.setChecked(false);
+                                askForGPS2();
+                            }
+                        else
+                            mGoogleClientApi.disconnect();
+                    }
+                });
 
-        // addValueEventListener will always listen for changes so if the user update his profile or
-        // change subscription line every thing will be updated properly in thins activity
-        mUsersReference.child(userId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Driver user = dataSnapshot.getValue(Driver.class);
-                username = user.username;
-                email = user.email;
-                lineChannel = user.line;
+                //retrieve user data from firebase
+                currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                userId = currentUser.getUid();
+                mFirebaseDatabase = FirebaseDatabase.getInstance();
+                mUsersReference = mFirebaseDatabase.getReference().child("drivers");
+
+                // addValueEventListener will always listen for changes so if the user update his profile or
+                // change subscription line every thing will be updated properly in thins activity
+                mUsersReference.child(userId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Driver user = dataSnapshot.getValue(Driver.class);
+                        username = user.username;
+                        email = user.email;
+                        lineChannel = user.line;
 
 
 /*
@@ -169,23 +176,49 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                 else
                     Glide.with(mProfileImageView.getContext()).load(user.photoUrl).into(mProfileImageView);
 */
-                //headerResult.updateProfileByIdentifier(new ProfileDrawerItem().withName(username));
+                        //headerResult.updateProfileByIdentifier(new ProfileDrawerItem().withName(username));
 
-                drawerUtil.SetupNavigationDrawer(mToolbar, LocationBroadcastActivity.this ,username, email, lineChannel);
+                        drawerUtil.SetupNavigationDrawer(mToolbar, LocationBroadcastActivity.this ,username, email, lineChannel);
 
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+                });
+
+                //Setting up Navigation Drawer
+                email = "ehabhamdy2012@gmail.com";
+                //drawerUtil.SetupNavigationDrawer(mToolbar, this, username, email);
+                new DrawerBuilder().withActivity(this).withToolbar(mToolbar).build();
+
+            } else {
+                // Driver signed out or No Network Connection
+                Intent intent = new Intent(this, ActivityLogin.class);
+
+                //Removing HomeActivity from the back stack
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+        } else {
+            Intent intent = new Intent(this, ActivityLogin.class);
+            //Removing HomeActivity from the back stack
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        }
+        ////////////////////////////////////////////////////////////////
 
-            }
 
-        });
 
-        //Setting up Navigation Drawer
-        email = "ehabhamdy2012@gmail.com";
-        //drawerUtil.SetupNavigationDrawer(mToolbar, this, username, email);
-        new DrawerBuilder().withActivity(this).withToolbar(mToolbar).build();
     }
 
     @Override
@@ -215,7 +248,8 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 
     @Override
     protected void onDestroy() {
-        mGoogleClientApi.disconnect();
+        if(mGoogleClientApi !=null && mGoogleClientApi.isConnected())
+            mGoogleClientApi.disconnect();
         super.onDestroy();
     }
 
