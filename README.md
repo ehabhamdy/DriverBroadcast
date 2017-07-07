@@ -8,6 +8,9 @@ there location and the available seats on their vehicles.
 3. Design Support Library.
 4. [Butterknife](jakewharton.github.io/butterknife/ "Butter Knife").
 
+## Rakabny Passneger app
+https://github.com/ehabhamdy/Rakabny
+
 ## Testing the app
 For testing purposes I regularly upload a signed apk file. please find the apk in the following directory
 DriverBroadcast/app/app-release.apk
