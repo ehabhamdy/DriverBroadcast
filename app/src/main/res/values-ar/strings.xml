@@ -3,4 +3,20 @@
     <string name="broadcast_button_text">ارسل مكاني الحالي</string>
     <string name="switcher_off_label">مفعل</string>
     <string name="switcher_on_label">غير مفعل</string>
+
+    <string name="password_hint">كلمه السر</string>
+    <string name="username_hint">اسم المستخدم</string>
+    <string name="email_hint">البريد الالكتروني</string>
+    <string name="signup">سجل الان</string>
+    <string name="login">دخول</string>
+    <string name="sign_up_hint">تسجيل مستخدم</string>
+    <string name="menu_profile">الملف الشخصي</string>
+    <string name="menu_logout">تسجيل خروج</string>
+    <string name="nav_main_label">الرئيسيه</string>
+    <string name="nav_subscribe_label">التسجيل في الخطوط</string>
+    <string name="nav_profile_label">الملف الشخصي</string>
+    <string name="nav_settings_label">اعدادات</string>
+    <string name="nav_logout_label">تسجيل خروج</string>
+    <string name="signup_activity_title">تسجيل مستخدم جديد</string>
+    <string name="login_activity_title">دخول</string>
 </resources>
