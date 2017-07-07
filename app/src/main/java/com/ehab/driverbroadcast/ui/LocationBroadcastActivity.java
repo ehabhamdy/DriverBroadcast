@@ -196,29 +196,26 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 
             } else {
                 // Driver signed out or No Network Connection
-                Intent intent = new Intent(this, ActivityLogin.class);
-
-                //Removing HomeActivity from the back stack
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                openLoginActivity();
             }
 
         } else {
-            Intent intent = new Intent(this, ActivityLogin.class);
-            //Removing HomeActivity from the back stack
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+           openLoginActivity();
         }
         ////////////////////////////////////////////////////////////////
 
 
 
+    }
+
+    private void openLoginActivity() {
+        Intent intent = new Intent(this, ActivityLogin.class);
+        //Removing HomeActivity from the back stack
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override
