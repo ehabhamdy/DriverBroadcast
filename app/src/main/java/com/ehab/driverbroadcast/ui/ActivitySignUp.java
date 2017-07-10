@@ -38,7 +38,7 @@ public class ActivitySignUp extends ActivityBase {
 
     private ProgressDialog mProgressDialog;
 
-    String defaultLine = "manshia-asfra";
+    String defaultLine = "Manshia : Asfra";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
