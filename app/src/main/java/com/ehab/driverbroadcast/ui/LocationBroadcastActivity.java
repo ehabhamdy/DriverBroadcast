@@ -3,7 +3,6 @@ package com.ehab.driverbroadcast.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -73,7 +72,6 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     PendingResult<LocationSettingsResult> result;
 
     private PubNub mPubnub;
-    String lineChannel;
 
     //TODO: Add the appropriate api keys for the pubnub service
     public static final String SUB_KEY = BuildConfig.SUB_KEY;
@@ -88,9 +86,10 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     FirebaseUser currentUser;
     String userId;
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mUsersReference;
+    private DatabaseReference mDriversReference;
     String username;
     String email;
+    String lineChannel;
 
     //Drawer drawer;
     //AccountHeader headerResult;
@@ -154,14 +153,14 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                 });
 
                 //retrieve user data from firebase
-                currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                userId = currentUser.getUid();
+                //currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                userId = user.getUid();
                 mFirebaseDatabase = FirebaseDatabase.getInstance();
-                mUsersReference = mFirebaseDatabase.getReference().child("drivers");
+                mDriversReference = mFirebaseDatabase.getReference().child("drivers");
 
                 // addValueEventListener will always listen for changes so if the user update his profile or
                 // change subscription line every thing will be updated properly in thins activity
-                mUsersReference.child(userId).addValueEventListener(new ValueEventListener() {
+                mDriversReference.child(userId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Driver user = dataSnapshot.getValue(Driver.class);
