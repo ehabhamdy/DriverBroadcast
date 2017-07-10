@@ -13,7 +13,10 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ui.ActivityLogin" />
         <activity android:name=".ui.ActivitySignUp" />
-        <activity android:name=".ui.LocationBroadcastActivity" android:theme="@style/MainActivityTheme">
+        <activity
+            android:name=".ui.LocationBroadcastActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/MainActivityTheme">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,7 +31,9 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".ui.ProfileActivity" />
-        <activity android:name=".ui.LineSubscriptionActivity" android:parentActivityName=".ui.LocationBroadcastActivity"></activity>
+        <activity
+            android:name=".ui.LineSubscriptionActivity"
+            android:parentActivityName=".ui.LocationBroadcastActivity"></activity>
     </application>
 
 </manifest>
