@@ -107,11 +107,11 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 
         if (user != null) {
             if (user.isEmailVerified()) {
-
                 mToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-                setSupportActionBar(mToolbar);
-                getSupportActionBar().setDisplayShowTitleEnabled(false);
-
+                if (getSupportActionBar() != null) {
+                    setSupportActionBar(mToolbar);
+                    getSupportActionBar().setDisplayShowTitleEnabled(false);
+                }
                 this.buildGoogleApiClient();
 
                 lineChannel = "awesome-channel";
@@ -151,7 +151,6 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                             mGoogleClientApi.disconnect();
                     }
                 });
-
                 //retrieve user data from firebase
                 //currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 userId = user.getUid();
@@ -167,27 +166,13 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                         username = user.username;
                         email = user.email;
                         lineChannel = user.line;
-
-
-/*
-                if(user.photoUrl == null)
-                    mProfileImageView.setImageResource(R.drawable.default_thumbnail);
-                else
-                    Glide.with(mProfileImageView.getContext()).load(user.photoUrl).into(mProfileImageView);
-*/
-                        //headerResult.updateProfileByIdentifier(new ProfileDrawerItem().withName(username));
-
                         drawerUtil.SetupNavigationDrawer(mToolbar, LocationBroadcastActivity.this ,username, email, lineChannel);
-
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
                     }
-
                 });
-
                 //Setting up Navigation Drawer
                 email = "ehabhamdy2012@gmail.com";
                 //drawerUtil.SetupNavigationDrawer(mToolbar, this, username, email);
@@ -201,10 +186,6 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         } else {
            openLoginActivity();
         }
-        ////////////////////////////////////////////////////////////////
-
-
-
     }
 
     private void openLoginActivity() {
@@ -259,11 +240,8 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         LocationRequest mLocationRequest = createLocationRequest();
-
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-
                 ActivityCompat.requestPermissions(this,
                         LOCATION_PERMS,
                         LOCATION_REQUEST);
@@ -274,14 +252,6 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
             }
             return;
         }
-
-       /* Location current = LocationServices.FusedLocationApi.getLastLocation(mGoogleClientApi);
-
-        if(current != null) {
-            LatLng latLng = new LatLng(current.getLatitude(), current.getLongitude());
-            CameraPosition cp = CameraPosition.builder().target(latLng).zoom(16).build();
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
-        }*/
         FusedLocationApi.requestLocationUpdates(mGoogleClientApi, mLocationRequest, this);
     }
 

@@ -52,7 +52,6 @@ public class LineSubscriptionActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,13 +62,9 @@ public class LineSubscriptionActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
         TextView tv = (TextView) mToolbar.findViewById(R.id.toolbar_title);
         tv.setText("Subscribe to line");
 
-        //drawerUtil = new NavigationDrawerUtil();
-        //drawerUtil.SetupNavigationDrawer(mToolbar, LineSubscriptionActivity.this ,username, email);
         Intent intent = getIntent();
         String line = intent.getStringExtra(NavigationDrawerUtil.SUB_LINE_EXTRA);
 

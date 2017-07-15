@@ -14,7 +14,6 @@ public class Driver {
     public String email;
     public String line;
 
-
     public Driver() {
         // Default constructor required for calls to DataSnapshot.getValue(Driver.class)
     }

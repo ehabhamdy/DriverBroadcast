@@ -25,8 +25,6 @@ import com.ehab.driverbroadcast.R;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class ActivitySignUp extends ActivityBase {
-
-
     private static final String TAG = "Message";
 
     private DatabaseReference mDatabase;
@@ -53,7 +51,6 @@ public class ActivitySignUp extends ActivityBase {
         //Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/VarelaRound-Regular.ttf");
         //tv.setTypeface(custom_font);
 
-
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
@@ -69,36 +66,25 @@ public class ActivitySignUp extends ActivityBase {
                 String username = mUsernameField.getText().toString();
                 String email = mEmailField.getText().toString();
                 String password = mPasswordField.getText().toString();
-
                 //create new user
                 signUp(username, email, password);
-                //Toast.makeText(SignUpActivity.this, email, Toast.LENGTH_SHORT).show();
                 //Log.i(TAG, email);
-
-
             }
         });
-
-
     }
 
     public void signUp(final String username, final String email, String password) {
-
         //Check if the email or password fields are empty
         if (!validateForm()) {
             return;
         }
-
         showProgressDialog();
-
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
-
                         hideProgressDialog();
-
                         if (task.isSuccessful()) {
                             onAuthSuccess(task.getResult().getUser(), username, email);
                             FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification();
@@ -135,25 +121,17 @@ public class ActivitySignUp extends ActivityBase {
         // Write new user
         writeNewUser(user.getUid(), username, email);
 
-        // Go to MainActivity
-//        Intent intent = new Intent(getActivity(), ActivityUserMain.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        startActivity(intent);
-
         Toast.makeText(getApplicationContext(), "Check your email inbox to verify your email and login here", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, ActivityLogin.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-
         //finish();
     }
 
     // [START basic_write]
     private void writeNewUser(String userId, String name, String email) {
         Driver driver = new Driver(name, email, defaultLine);
-
         mDatabase.child("drivers").child(userId).setValue(driver);
     }
     // [END basic_write]
@@ -173,7 +151,6 @@ public class ActivitySignUp extends ActivityBase {
             mProgressDialog.setCancelable(false);
             mProgressDialog.setMessage("Loading...");
         }
-
         mProgressDialog.show();
     }
 

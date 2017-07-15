@@ -46,7 +46,6 @@ public class ActivityLogin extends ActivityBase {
         //Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/VarelaRound-Regular.ttf");
         //tv.setTypeface(custom_font);
 
-
         mSignUpTextView = (TextView) findViewById(R.id.sigupText);
         mSignUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,13 +54,10 @@ public class ActivityLogin extends ActivityBase {
                 startActivity(intent);
             }
         });
-
-
         mEmailField = (EditText) findViewById(R.id.editText);
         mPasswordField = (EditText) findViewById(R.id.editText2);
 
         btn = (Button) findViewById(R.id.button);
-
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,8 +71,6 @@ public class ActivityLogin extends ActivityBase {
                 }
             }
         });
-
-
     }
 
 
@@ -138,7 +132,6 @@ public class ActivityLogin extends ActivityBase {
         } else {
             mPasswordField.setError(null);
         }
-
         return result;
     }
 }

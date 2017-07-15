@@ -40,7 +40,6 @@ public class NavigationDrawerUtil {
     public Drawer SetupNavigationDrawer(Toolbar mToolbar, final Activity activity , String username, String email, final String line) {
         // Create the AccountHeader
 
-
         headerResult = new AccountHeaderBuilder()
                 .withActivity(activity)
                 .withHeaderBackground(R.drawable.drawer_bg)
@@ -103,15 +102,11 @@ public class NavigationDrawerUtil {
                                 break;
 
                         }
-
-
                         return true;
                     }
                 })
                 .withAccountHeader(headerResult)
                 .build();
-
-
         return drawer;
     }
 }
