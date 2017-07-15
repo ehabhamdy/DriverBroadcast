@@ -6,6 +6,7 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.ehab.driverbroadcast.BuildConfig;
 import com.ehab.driverbroadcast.R;
 import com.ehab.driverbroadcast.model.Driver;
+import com.ehab.driverbroadcast.model.LocationMessage;
 import com.ehab.driverbroadcast.utils.NavigationDrawerUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -275,7 +277,9 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         CameraPosition cp = CameraPosition.builder().target(latLng).zoom(16).build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cp), 1000, null);
-        broadcastLocation(location, lineChannel);
+        LocationMessage info = new LocationMessage(lineChannel, location);
+        new PublishLocationTask().execute(info);
+        //broadcastLocation(location, lineChannel);
     }
 
     @Override
@@ -286,32 +290,40 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                 askForGPS();
             }
         }
-
     }
 
-    private void broadcastLocation(Location location, String channel) {
-        JSONObject message = new JSONObject();
-        try {
-            message.put("lat", location.getLatitude());
-            message.put("lng", location.getLongitude());
-            message.put("alt", location.getAltitude());
-        } catch (JSONException e) {
-            //Log.e(TAG, e.toString());
+    class PublishLocationTask extends AsyncTask<LocationMessage, Void, Void>{
+        @Override
+        protected Void doInBackground(LocationMessage... params) {
+            LocationMessage info = params[0];
+            broadcastLocation(info.getLocation(), info.getChannel());
+            return null;
         }
-        Toast.makeText(this, "Sent", Toast.LENGTH_SHORT).show();
-        mPubnub.publish()
-                .message(message)
-                .channel(channel)
-                .async(new PNCallback<PNPublishResult>() {
-                    @Override
-                    public void onResponse(PNPublishResult result, PNStatus status) {
-                        // handle publish result, status always present, result if successful
-                        // status.isError to see if error happened
-                        if(status.isError()){
-                            Toast.makeText(LocationBroadcastActivity.this, "Error", Toast.LENGTH_SHORT).show();
+
+        private void broadcastLocation(Location location, String channel) {
+            JSONObject message = new JSONObject();
+            try {
+                message.put("lat", location.getLatitude());
+                message.put("lng", location.getLongitude());
+                message.put("alt", location.getAltitude());
+            } catch (JSONException e) {
+                //Log.e(TAG, e.toString());
+            }
+            //Toast.makeText(this, "Sent", Toast.LENGTH_SHORT).show();
+            mPubnub.publish()
+                    .message(message)
+                    .channel(channel)
+                    .async(new PNCallback<PNPublishResult>() {
+                        @Override
+                        public void onResponse(PNPublishResult result, PNStatus status) {
+                            // handle publish result, status always present, result if successful
+                            // status.isError to see if error happened
+                            if(status.isError()){
+                                //Toast.makeText(LocationBroadcastActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 
     private void askForGPS() {
