@@ -12,6 +12,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "SUB_KEY", SUB_KEY)
         buildConfigField("String", "PUB_KEY", PUB_KEY)
+        buildConfigField("String", "INSTABUG_APP_TOKEN", INSTABUG_APP_TOKEN)
 
     }
     buildTypes {
@@ -38,6 +39,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:11.0.2'
     compile 'com.google.firebase:firebase-auth:11.0.2'
     compile 'com.google.firebase:firebase-database:11.0.2'
+    compile 'com.instabug.library:instabug:4.2.5'
 
     compile 'com.jakewharton:butterknife:8.6.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
