@@ -295,30 +295,6 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         }
     }
 
-    private void broadcastLocation(Location location, String channel) {
-        JSONObject message = new JSONObject();
-        try {
-            message.put("lat", location.getLatitude());
-            message.put("lng", location.getLongitude());
-            message.put("bnum", Double.parseDouble(busNumber));
-        } catch (JSONException e) {
-            //Log.e(TAG, e.toString());
-        }
-        Toast.makeText(this, "Sent", Toast.LENGTH_SHORT).show();
-        mPubnub.publish()
-                .message(message)
-                .channel(channel)
-                .async(new PNCallback<PNPublishResult>() {
-                    @Override
-                    public void onResponse(PNPublishResult result, PNStatus status) {
-                        // handle publish result, status always present, result if successful
-                        // status.isError to see if error happened
-                        if(status.isError()){
-                            Toast.makeText(LocationBroadcastActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
 
     class PublishLocationTask extends AsyncTask<LocationMessage, Void, Void>{
         @Override
@@ -334,6 +310,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                 message.put("lat", location.getLatitude());
                 message.put("lng", location.getLongitude());
                 message.put("bnum", Double.parseDouble(busNumber));
+                //message.put("free", );
             } catch (JSONException e) {
                 //Log.e(TAG, e.toString());
             }
