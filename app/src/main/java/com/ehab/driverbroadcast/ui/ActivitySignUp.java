@@ -24,16 +24,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.ehab.driverbroadcast.R;
 import com.google.firebase.database.FirebaseDatabase;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ActivitySignUp extends ActivityBase {
     private static final String TAG = "Message";
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
-    EditText mUsernameField;
-    EditText mEmailField;
-    EditText mPasswordField;
-
+    @BindView(R.id.usernameEditText) EditText mUsernameField;
+    @BindView(R.id.emailEditText) EditText mEmailField;
+    @BindView(R.id.passwordEditText) EditText mPasswordField;
+    @BindView(R.id.busNumberEditText) EditText mBusNumberField;
     private ProgressDialog mProgressDialog;
 
     String defaultLine = "Manshia : Asfra";
@@ -42,6 +45,7 @@ public class ActivitySignUp extends ActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        ButterKnife.bind(this);
         mToolbar = (Toolbar) findViewById(R.id.login_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -54,9 +58,6 @@ public class ActivitySignUp extends ActivityBase {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
-        mEmailField = (EditText) findViewById(R.id.emailEditText);
-        mPasswordField = (EditText) findViewById(R.id.passwordEditText);
-        mUsernameField = (EditText) findViewById(R.id.usernameEditText);
 
         final Button signupBtn = (Button) findViewById(R.id.signupButton);
 
@@ -66,14 +67,15 @@ public class ActivitySignUp extends ActivityBase {
                 String username = mUsernameField.getText().toString();
                 String email = mEmailField.getText().toString();
                 String password = mPasswordField.getText().toString();
+                String busNumber = mBusNumberField.getText().toString();
                 //create new user
-                signUp(username, email, password);
+                signUp(username, email, busNumber, password);
                 //Log.i(TAG, email);
             }
         });
     }
 
-    public void signUp(final String username, final String email, String password) {
+    public void signUp(final String username, final String email, final String busNumber, String password) {
         //Check if the email or password fields are empty
         if (!validateForm()) {
             return;
@@ -86,7 +88,7 @@ public class ActivitySignUp extends ActivityBase {
                         Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
                         hideProgressDialog();
                         if (task.isSuccessful()) {
-                            onAuthSuccess(task.getResult().getUser(), username, email);
+                            onAuthSuccess(task.getResult().getUser(), username, email, busNumber);
                             FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification();
 
                         } else {
@@ -115,11 +117,11 @@ public class ActivitySignUp extends ActivityBase {
         return result;
     }
 
-    private void onAuthSuccess(FirebaseUser user, String username, String email) {
+    private void onAuthSuccess(FirebaseUser user, String username, String email, String busNumber) {
         //String username = usernameFromEmail(user.getEmail());
 
         // Write new user
-        writeNewUser(user.getUid(), username, email);
+        writeNewUser(user.getUid(), username, email, busNumber);
 
         Toast.makeText(getApplicationContext(), "Check your email inbox to verify your email and login here", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, ActivityLogin.class);
@@ -130,8 +132,8 @@ public class ActivitySignUp extends ActivityBase {
     }
 
     // [START basic_write]
-    private void writeNewUser(String userId, String name, String email) {
-        Driver driver = new Driver(name, email, defaultLine);
+    private void writeNewUser(String userId, String name, String email, String busNumber) {
+        Driver driver = new Driver(name, email, busNumber, defaultLine);
         mDatabase.child("drivers").child(userId).setValue(driver);
     }
     // [END basic_write]

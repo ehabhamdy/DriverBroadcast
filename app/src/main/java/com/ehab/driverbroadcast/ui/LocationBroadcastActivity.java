@@ -92,6 +92,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     String username;
     String email;
     String lineChannel;
+    String busNumber;
 
     //Drawer drawer;
     //AccountHeader headerResult;
@@ -168,6 +169,8 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                         username = user.username;
                         email = user.email;
                         lineChannel = user.line;
+                        busNumber = user.busNumber;
+
                         drawerUtil.SetupNavigationDrawer(mToolbar, LocationBroadcastActivity.this ,username, email, lineChannel);
                     }
 
@@ -292,6 +295,31 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         }
     }
 
+    private void broadcastLocation(Location location, String channel) {
+        JSONObject message = new JSONObject();
+        try {
+            message.put("lat", location.getLatitude());
+            message.put("lng", location.getLongitude());
+            message.put("bnum", Double.parseDouble(busNumber));
+        } catch (JSONException e) {
+            //Log.e(TAG, e.toString());
+        }
+        Toast.makeText(this, "Sent", Toast.LENGTH_SHORT).show();
+        mPubnub.publish()
+                .message(message)
+                .channel(channel)
+                .async(new PNCallback<PNPublishResult>() {
+                    @Override
+                    public void onResponse(PNPublishResult result, PNStatus status) {
+                        // handle publish result, status always present, result if successful
+                        // status.isError to see if error happened
+                        if(status.isError()){
+                            Toast.makeText(LocationBroadcastActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
     class PublishLocationTask extends AsyncTask<LocationMessage, Void, Void>{
         @Override
         protected Void doInBackground(LocationMessage... params) {
@@ -305,7 +333,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
             try {
                 message.put("lat", location.getLatitude());
                 message.put("lng", location.getLongitude());
-                message.put("alt", location.getAltitude());
+                message.put("bnum", Double.parseDouble(busNumber));
             } catch (JSONException e) {
                 //Log.e(TAG, e.toString());
             }

@@ -12,7 +12,9 @@ public class Driver {
 
     public String username;
     public String email;
+    public String busNumber;
     public String line;
+    public int freePlaces = 12;
 
     public Driver() {
         // Default constructor required for calls to DataSnapshot.getValue(Driver.class)
@@ -21,9 +23,10 @@ public class Driver {
     public Driver(String username) {
         this.username = username;
     }
-    public Driver(String username, String email, String line) {
+    public Driver(String username, String email, String busNumber, String line) {
         this.username = username;
         this.email = email;
         this.line = line;
+        this.busNumber = busNumber;
     }
 }
