@@ -15,6 +15,7 @@ public class Driver {
     public String busNumber;
     public String line;
     public int freePlaces = 12;
+    public String wifiName;
 
     public Driver() {
         // Default constructor required for calls to DataSnapshot.getValue(Driver.class)
@@ -28,5 +29,9 @@ public class Driver {
         this.email = email;
         this.line = line;
         this.busNumber = busNumber;
+    }
+
+    public void setWifiName(String wifiName) {
+        this.wifiName = wifiName;
     }
 }

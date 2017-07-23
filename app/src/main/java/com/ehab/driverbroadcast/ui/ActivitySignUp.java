@@ -1,7 +1,12 @@
 package com.ehab.driverbroadcast.ui;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
@@ -134,6 +139,7 @@ public class ActivitySignUp extends ActivityBase {
     // [START basic_write]
     private void writeNewUser(String userId, String name, String email, String busNumber) {
         Driver driver = new Driver(name, email, busNumber, defaultLine);
+        driver.setWifiName(getCurrentSsid(this));
         mDatabase.child("drivers").child(userId).setValue(driver);
     }
     // [END basic_write]
@@ -160,6 +166,22 @@ public class ActivitySignUp extends ActivityBase {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
+    }
+    public String getCurrentSsid(Context context) {
+
+        String ssid = null;
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (networkInfo.isConnected()) {
+            final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+            if (connectionInfo != null && !(connectionInfo.getSSID().equals(""))) {
+                ssid = connectionInfo.getSSID();
+            }
+        }else{
+            ssid = "SIM connection";
+        }
+        return ssid;
     }
 }
 

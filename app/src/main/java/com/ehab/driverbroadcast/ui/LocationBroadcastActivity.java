@@ -310,6 +310,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                 message.put("lat", location.getLatitude());
                 message.put("lng", location.getLongitude());
                 message.put("bnum", Double.parseDouble(busNumber));
+                message.put("free", 12.0);
                 //message.put("free", );
             } catch (JSONException e) {
                 //Log.e(TAG, e.toString());
