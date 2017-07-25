@@ -150,8 +150,28 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                                 mSwitcher.setChecked(false);
                                 askForGPS2();
                             }
-                        else
+                        else {
+                            JSONObject stopMessage = new JSONObject();
+                            try {
+                                stopMessage.put("closeSignal", 1.0);
+                                stopMessage.put("bnum", Double.parseDouble(busNumber));
+
+                            } catch (JSONException e) {
+                                //Log.e(TAG, e.toString());
+                            }
+                            //Toast.makeText(this, "Sent", Toast.LENGTH_SHORT).show();
+                            mPubnub.publish()
+                                    .message(stopMessage)
+                                    .channel(lineChannel)
+                                    .async(new PNCallback<PNPublishResult>() {
+                                        @Override
+                                        public void onResponse(PNPublishResult result, PNStatus status) {
+                                            if(status.isError()){
+                                            }
+                                        }
+                                    });
                             mGoogleClientApi.disconnect();
+                        }
                     }
                 });
                 //retrieve user data from firebase
