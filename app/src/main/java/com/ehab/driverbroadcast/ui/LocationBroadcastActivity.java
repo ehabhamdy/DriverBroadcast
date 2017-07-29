@@ -282,9 +282,8 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     @Override
     protected void onDestroy() {
         if (mGoogleClientApi != null && mGoogleClientApi.isConnected()) {
-            mGoogleClientApi.disconnect();
-            NotificationManager notificationManger = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManger.cancel(BROADCAST_NOTIFICATION_ID);
+            mGoogleClientApi.disconnect();
         }
         super.onDestroy();
     }
