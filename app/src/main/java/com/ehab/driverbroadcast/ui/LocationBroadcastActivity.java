@@ -1,5 +1,8 @@
 package com.ehab.driverbroadcast.ui;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -7,9 +10,13 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -61,10 +68,11 @@ import org.json.JSONObject;
 import static com.google.android.gms.location.LocationServices.FusedLocationApi;
 
 public class LocationBroadcastActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-                                                                            LocationListener,
-                                                                            OnMapReadyCallback{
+        LocationListener,
+        OnMapReadyCallback {
 
     public static final String TAG = LocationBroadcastActivity.class.getName();
+    private static final int BROADCAST_NOTIFICATION_ID = 0;
 
     Toolbar mToolbar;
     private Switch mSwitcher;
@@ -98,12 +106,13 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     //AccountHeader headerResult;
 
     NavigationDrawerUtil drawerUtil = new NavigationDrawerUtil();
-
+    NotificationManager notificationManger;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_broadcast);
 
+        notificationManger = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         ////////////////////////////////////////////////////////////////
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -136,21 +145,24 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                     }
                 });
 
-                final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+                final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                 mSwitcher = (Switch) findViewById(R.id.switcher);
                 mSwitcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                        if(isChecked)
-                            if ( manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                        if (isChecked)
+                            if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                                 mGoogleClientApi.connect();
-                            } else{
+                                setupOngoingNotification();
+                            } else {
                                 Toast.makeText(LocationBroadcastActivity.this, "Enabling GPS is MANDATORY", Toast.LENGTH_SHORT).show();
                                 mSwitcher.setChecked(false);
                                 mSwitcher.setChecked(false);
                                 askForGPS2();
                             }
+
                         else {
+                            notificationManger.cancel(BROADCAST_NOTIFICATION_ID);
                             JSONObject stopMessage = new JSONObject();
                             try {
                                 stopMessage.put("closeSignal", 1.0);
@@ -166,7 +178,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                                     .async(new PNCallback<PNPublishResult>() {
                                         @Override
                                         public void onResponse(PNPublishResult result, PNStatus status) {
-                                            if(status.isError()){
+                                            if (status.isError()) {
                                             }
                                         }
                                     });
@@ -191,7 +203,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                         lineChannel = user.line;
                         busNumber = user.busNumber;
 
-                        drawerUtil.SetupNavigationDrawer(mToolbar, LocationBroadcastActivity.this ,username, email, lineChannel);
+                        drawerUtil.SetupNavigationDrawer(mToolbar, LocationBroadcastActivity.this, username, email, lineChannel);
                     }
 
                     @Override
@@ -209,8 +221,27 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
             }
 
         } else {
-           openLoginActivity();
+            openLoginActivity();
         }
+    }
+
+    private void setupOngoingNotification() {
+        Intent intent = new Intent(this, LocationBroadcastActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, BROADCAST_NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+        builder.setContentTitle("Rakkebny");
+        builder.setContentText("Your are online and your location is being sent now");
+        builder.setSubText("Warning");
+        builder.setNumber(101);
+        builder.setContentIntent(pendingIntent);
+        builder.setTicker("Fancy Notification");
+        builder.setSmallIcon(R.drawable.logo);
+        builder.setOngoing(true);
+        builder.setAutoCancel(true);
+        builder.setPriority(Notification.PRIORITY_HIGH);
+        Notification notification = builder.build();
+        notificationManger.notify(BROADCAST_NOTIFICATION_ID, notification);
+
     }
 
     private void openLoginActivity() {
@@ -226,7 +257,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     @Override
     protected void onResume() {
         super.onResume();
-        if(drawerUtil.getDrawer() != null) {
+        if (drawerUtil.getDrawer() != null) {
             drawerUtil.getDrawer().setSelection(1);
             drawerUtil.getDrawer().closeDrawer();
         }
@@ -250,8 +281,11 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
 
     @Override
     protected void onDestroy() {
-        if(mGoogleClientApi !=null && mGoogleClientApi.isConnected())
+        if (mGoogleClientApi != null && mGoogleClientApi.isConnected()) {
             mGoogleClientApi.disconnect();
+            NotificationManager notificationManger = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManger.cancel(BROADCAST_NOTIFICATION_ID);
+        }
         super.onDestroy();
     }
 
@@ -308,15 +342,15 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
-            if(requestCode == LOCATION_REQUEST){
+        if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
+            if (requestCode == LOCATION_REQUEST) {
                 askForGPS();
             }
         }
     }
 
 
-    class PublishLocationTask extends AsyncTask<LocationMessage, Void, Void>{
+    class PublishLocationTask extends AsyncTask<LocationMessage, Void, Void> {
         @Override
         protected Void doInBackground(LocationMessage... params) {
             LocationMessage info = params[0];
@@ -344,7 +378,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                         public void onResponse(PNPublishResult result, PNStatus status) {
                             // handle publish result, status always present, result if successful
                             // status.isError to see if error happened
-                            if(status.isError()){
+                            if (status.isError()) {
                                 //Toast.makeText(LocationBroadcastActivity.this, "Error", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -403,7 +437,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         }
         mMap.setMyLocationEnabled(true);
 
-        if(mGoogleClientApi.isConnected()) {
+        if (mGoogleClientApi.isConnected()) {
             Location current = LocationServices.FusedLocationApi.getLastLocation(mGoogleClientApi);
             LatLng latLng = new LatLng(current.getLatitude(), current.getLongitude());
             CameraPosition cp = CameraPosition.builder().target(latLng).build();
