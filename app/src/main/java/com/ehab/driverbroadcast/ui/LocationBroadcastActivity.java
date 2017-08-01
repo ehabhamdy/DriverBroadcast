@@ -30,6 +30,7 @@ import com.ehab.driverbroadcast.BuildConfig;
 import com.ehab.driverbroadcast.R;
 import com.ehab.driverbroadcast.model.Driver;
 import com.ehab.driverbroadcast.model.LocationMessage;
+import com.ehab.driverbroadcast.model.Ticket;
 import com.ehab.driverbroadcast.utils.NavigationDrawerUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -48,8 +49,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -65,11 +69,16 @@ import com.pubnub.api.models.consumer.PNStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import static com.google.android.gms.location.LocationServices.FusedLocationApi;
 
 public class LocationBroadcastActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         LocationListener,
-        OnMapReadyCallback {
+        OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener{
 
     public static final String TAG = LocationBroadcastActivity.class.getName();
     private static final int BROADCAST_NOTIFICATION_ID = 0;
@@ -80,6 +89,9 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     private GoogleApiClient mGoogleClientApi;
     private LocationRequest mLocationRequest;
     PendingResult<LocationSettingsResult> result;
+
+    private HashMap<String, Marker> passengerMarkers;
+    private List<String> mTicketsIds = new ArrayList<>();
 
     private PubNub mPubnub;
 
@@ -97,10 +109,14 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     String userId;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDriversReference;
+    DatabaseReference ticketsReference;
+    ChildEventListener childEventListener;
     String username;
     String email;
     String lineChannel;
     String busNumber;
+
+    int c = 0;
 
     //Drawer drawer;
     //AccountHeader headerResult;
@@ -111,7 +127,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_broadcast);
-
+        passengerMarkers = new HashMap<>();
         notificationManger = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         ////////////////////////////////////////////////////////////////
@@ -197,13 +213,61 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                 mDriversReference.child(userId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Driver user = dataSnapshot.getValue(Driver.class);
+                        final Driver user = dataSnapshot.getValue(Driver.class);
                         username = user.username;
                         email = user.email;
                         lineChannel = user.line;
                         busNumber = user.busNumber;
 
                         drawerUtil.SetupNavigationDrawer(mToolbar, LocationBroadcastActivity.this, user);
+
+                        ticketsReference = mFirebaseDatabase.getReference()
+                                .child("reservations").child(busNumber);
+
+                        childEventListener = new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                                Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
+
+                                Ticket ticket = dataSnapshot.getValue(Ticket.class);
+                                //Toast.makeText(getApplicationContext(), "add called " + ++c, Toast.LENGTH_SHORT).show();
+                                if(ticket.valid == true) {
+                                    Marker m = mMap.addMarker(new MarkerOptions().position(new LatLng(ticket.userLocation.getLatitude(), ticket.userLocation.getLongitude())));
+                                    m.setTitle(ticket.ticketNumber);
+                                    passengerMarkers.put(ticket.ticketNumber, m);
+                                }
+                            }
+
+                            @Override
+                            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+                                Log.d(TAG, "onChildChanged:" + dataSnapshot.getKey());
+                            }
+
+                            @Override
+                            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                                Log.d(TAG, "onChildRemoved:" + dataSnapshot.getKey());
+                                Ticket ticket = dataSnapshot.getValue(Ticket.class);
+
+                                if (passengerMarkers.get(ticket.ticketNumber) != null) {
+                                    passengerMarkers.get(ticket.ticketNumber).remove();
+                                    passengerMarkers.remove(ticket.ticketNumber);
+                                }
+                            }
+
+                            @Override
+                            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
+                                Log.d(TAG, "onChildMoved:" + dataSnapshot.getKey());
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w(TAG, "postComments:onCancelled", databaseError.toException());
+                                Toast.makeText(getApplicationContext(), "Failed to load orders.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        };
+                        ticketsReference.addChildEventListener(childEventListener);
+
                     }
 
                     @Override
@@ -214,6 +278,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                 email = "ehabhamdy2012@gmail.com";
                 //drawerUtil.SetupNavigationDrawer(mToolbar, this, username, email);
                 new DrawerBuilder().withActivity(this).withToolbar(mToolbar).build();
+
 
             } else {
                 // Driver signed out or No Network Connection
@@ -261,6 +326,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
             drawerUtil.getDrawer().setSelection(1);
             drawerUtil.getDrawer().closeDrawer();
         }
+
     }
 
     private void askForGPS2() {
@@ -348,6 +414,17 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         }
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        String ticketId = marker.getTitle();
+        if (passengerMarkers.get(ticketId) != null) {
+            passengerMarkers.get(ticketId).remove();
+            passengerMarkers.remove(ticketId);
+            FirebaseDatabase.getInstance().getReference().child("reservations").child(busNumber).child(ticketId).child("valid").setValue(false);
+        }
+        return false;
+    }
+
 
     class PublishLocationTask extends AsyncTask<LocationMessage, Void, Void> {
         @Override
@@ -414,6 +491,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMarkerClickListener(this);
         boolean success = mMap.setMapStyle(new MapStyleOptions(getResources().getString(R.string.style_json)));
 
 
