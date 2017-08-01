@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ehab.driverbroadcast.R;
+import com.ehab.driverbroadcast.model.Driver;
 import com.ehab.driverbroadcast.ui.ActivityLogin;
 import com.ehab.driverbroadcast.ui.LineSubscriptionActivity;
 import com.ehab.driverbroadcast.ui.LocationBroadcastActivity;
@@ -33,18 +34,21 @@ public class NavigationDrawerUtil {
 
     public static final String  SUB_LINE_EXTRA = "Line_Extra_Data";
 
+    public static final String USERNAME_EXTRA = "Username_Data";
+    public static final String EMAIL_EXTRA = "email_Data";
+
     public Drawer getDrawer() {
         return drawer;
     }
 
-    public Drawer SetupNavigationDrawer(Toolbar mToolbar, final Activity activity , String username, String email, final String line) {
+    public Drawer SetupNavigationDrawer(Toolbar mToolbar, final Activity activity , final Driver user) {
         // Create the AccountHeader
 
         headerResult = new AccountHeaderBuilder()
                 .withActivity(activity)
                 .withHeaderBackground(R.drawable.drawer_bg)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(username).withEmail(email).withIcon(activity.getResources().getDrawable(R.drawable.toobar_icon))
+                        new ProfileDrawerItem().withName(user.username).withEmail(user.email).withIcon(activity.getResources().getDrawable(R.drawable.toobar_icon))
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -83,12 +87,15 @@ public class NavigationDrawerUtil {
                                 return true;
                             case 3:
                                 Intent openSubscriptionIntent = new Intent(activity.getApplicationContext(), LineSubscriptionActivity.class);
-                                openSubscriptionIntent.putExtra(SUB_LINE_EXTRA, line);
+                                openSubscriptionIntent.putExtra(SUB_LINE_EXTRA, user.line);
                                 activity.startActivity(openSubscriptionIntent);
                                 drawer.closeDrawer();
                                 return true;
                             case 5:
                                 Intent openProfileIntent = new Intent(activity.getApplicationContext(), ProfileActivity.class);
+                                openProfileIntent.putExtra(USERNAME_EXTRA, user.username);
+                                openProfileIntent.putExtra(EMAIL_EXTRA, user.email);
+                                openProfileIntent.putExtra(SUB_LINE_EXTRA, String.valueOf(user.line));
                                 activity.startActivity(openProfileIntent);
                                 drawer.closeDrawer();
                                 return true;

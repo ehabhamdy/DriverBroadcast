@@ -203,7 +203,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                         lineChannel = user.line;
                         busNumber = user.busNumber;
 
-                        drawerUtil.SetupNavigationDrawer(mToolbar, LocationBroadcastActivity.this, username, email, lineChannel);
+                        drawerUtil.SetupNavigationDrawer(mToolbar, LocationBroadcastActivity.this, user);
                     }
 
                     @Override
