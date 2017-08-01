@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.ehab.driverbroadcast.R;
 import com.ehab.driverbroadcast.utils.NavigationDrawerUtil;
+import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,8 +24,8 @@ public class ProfileActivity extends AppCompatActivity {
     @BindView(R.id.line_textview)
     TextView lineTextView;
 
-    @BindView(R.id.back_button)
-    Button backButton;
+    @BindView(R.id.logout_button)
+    Button logoutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,17 @@ public class ProfileActivity extends AppCompatActivity {
         emailTextview.setText(email);
         lineTextView.setText(line);
 
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getApplicationContext(), ActivityLogin.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     public void backButtonPressed(View view){
