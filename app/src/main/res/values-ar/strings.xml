@@ -20,4 +20,8 @@
     <string name="signup_activity_title">تسجيل مستخدم جديد</string>
     <string name="login_activity_title">دخول</string>
     <string name="bus_number_hint">رقم المركبه</string>
+    <string name="current_line_label">الخط الحالي</string>
+    <string name="email_label">البريد</string>
+    <string name="profile_activity_title">الملف الشخصي</string>
+    <string name="username_label">اسم المستخدم</string>
 </resources>
