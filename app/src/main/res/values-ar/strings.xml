@@ -45,4 +45,7 @@
     <string name="notification_message_text">يتم الن ارس كناكملا</string>
     <string name="signup_error_message">خطآ</string>
     <string name="signup_feedback_message">من فضلك فعل الحساب من البريد الخاص بك</string>
+    <string name="email_required_hint_message">مطلوب</string>
+    <string name="password_required_hint_messages">مطلوب</string>
+    <string name="progressdialog_loading_message">جاري التحميل</string>
 </resources>
