@@ -106,14 +106,14 @@ public class ActivitySignUp extends ActivityBase {
     private boolean validateForm() {
         boolean result = true;
         if (TextUtils.isEmpty(mEmailField.getText().toString())) {
-            mEmailField.setError("Required");
+            mEmailField.setError(getString(R.string.email_required_hint_message));
             result = false;
         } else {
             mEmailField.setError(null);
         }
 
         if (TextUtils.isEmpty(mPasswordField.getText().toString())) {
-            mPasswordField.setError("Required");
+            mPasswordField.setError(getString(R.string.password_required_hint_messages));
             result = false;
         } else {
             mPasswordField.setError(null);
@@ -157,7 +157,7 @@ public class ActivitySignUp extends ActivityBase {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setCancelable(false);
-            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.setMessage(getString(R.string.progressdialog_loading_message));
         }
         mProgressDialog.show();
     }

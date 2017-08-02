@@ -50,4 +50,7 @@
     <string name="default_email" translatable="false">ehabhamdy2012@gmail.com</string>
     <string name="notification_message_text">Your are online and your location is being sent now</string>
     <string name="notification_subtext_text" translatable="false">Warning</string>
+    <string name="email_required_hint_message">Required</string>
+    <string name="password_required_hint_messages">Required</string>
+    <string name="progressdialog_loading_message">Loading...</string>
 </resources>

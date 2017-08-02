@@ -87,25 +87,19 @@ public class LineSubscriptionActivity extends AppCompatActivity {
     }
 
     private void setCurrentLine(String line) {
-        switch(line){
-            case "Manshia : Asafra":
-                r1.setChecked(true);
-                break;
-            case "Manshia : Victoria":
-                r2.setChecked(true);
-                break;
-            case "Manshia : Mandra":
-                r3.setChecked(true);
-                break;
-            case "Asfra : Mahta":
-                r4.setChecked(true);
-                break;
-            case "Mandra : Mahta":
-                r5.setChecked(true);
-                break;
-            case "Mandra : Aboker":
-                r6.setChecked(true);
-                break;
+
+        if(line.equals(getString(R.string.manshia_asfra_line_label))){
+            r1.setChecked(true);
+        } else if (line.equals(getString(R.string.manshia_victoria_line_label))){
+            r2.setChecked(true);
+        } else if (line.equals(getString(R.string.manshia_mandra_line_label))){
+            r3.setChecked(true);
+        } else if(line.equals(getString(R.string.asfra_mahta_line_label))){
+            r4.setChecked(true);
+        } else if(line.equals(getString(R.string.mandra_mahta_line_label))){
+            r5.setChecked(true);
+        } else {
+            r6.setChecked(true);
         }
     }
 }
