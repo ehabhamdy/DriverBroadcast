@@ -69,7 +69,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                tools:text="Ehab Hamdy" />
+                tools:text="@string/username_value_text" />
         </LinearLayout>
 
         <LinearLayout

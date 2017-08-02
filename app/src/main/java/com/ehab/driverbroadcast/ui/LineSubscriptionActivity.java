@@ -63,7 +63,7 @@ public class LineSubscriptionActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         TextView tv = (TextView) mToolbar.findViewById(R.id.toolbar_title);
-        tv.setText("Subscribe to line");
+        tv.setText(R.string.line_subscription_activity_title);
 
         Intent intent = getIntent();
         String line = intent.getStringExtra(NavigationDrawerUtil.SUB_LINE_EXTRA);
@@ -81,14 +81,14 @@ public class LineSubscriptionActivity extends AppCompatActivity {
                 mDatabase = FirebaseDatabase.getInstance().getReference();
                 mDatabase.child("drivers").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("line").setValue(selectedLineRadio.getText());
 
-                Toast.makeText(LineSubscriptionActivity.this, "Confirmed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LineSubscriptionActivity.this, R.string.line_subscription_confirmation_message, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void setCurrentLine(String line) {
         switch(line){
-            case "Manshia : Asfra":
+            case "Manshia : Asafra":
                 r1.setChecked(true);
                 break;
             case "Manshia : Victoria":

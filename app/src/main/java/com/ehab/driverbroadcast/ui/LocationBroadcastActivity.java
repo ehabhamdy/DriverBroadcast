@@ -171,7 +171,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                                 mGoogleClientApi.connect();
                                 setupOngoingNotification();
                             } else {
-                                Toast.makeText(LocationBroadcastActivity.this, "Enabling GPS is MANDATORY", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LocationBroadcastActivity.this, R.string.gps_hint_message, Toast.LENGTH_SHORT).show();
                                 mSwitcher.setChecked(false);
                                 mSwitcher.setChecked(false);
                                 askForGPS2();
@@ -262,7 +262,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
                                 Log.w(TAG, "postComments:onCancelled", databaseError.toException());
-                                Toast.makeText(getApplicationContext(), "Failed to load orders.",
+                                Toast.makeText(getApplicationContext(), R.string.tickets_loading_error_message,
                                         Toast.LENGTH_SHORT).show();
                             }
                         };
@@ -445,7 +445,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
             } catch (JSONException e) {
                 //Log.e(TAG, e.toString());
             }
-            //Toast.makeText(this, "Sent", Toast.LENGTH_SHORT).show();
+
             mPubnub.publish()
                     .message(message)
                     .channel(channel)
@@ -455,7 +455,6 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                             // handle publish result, status always present, result if successful
                             // status.isError to see if error happened
                             if (status.isError()) {
-                                //Toast.makeText(LocationBroadcastActivity.this, "Error", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

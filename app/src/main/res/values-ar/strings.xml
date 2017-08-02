@@ -24,4 +24,18 @@
     <string name="email_label">البريد</string>
     <string name="profile_activity_title">الملف الشخصي</string>
     <string name="username_label">اسم المستخدم</string>
+    <string name="asfra_mahta_line_label">العصافره الي المحطه</string>
+    <string name="line_subscription_hint_text">تغيير الخط يمكنك من الظهور علي خريطه الركاب علي نفس الخط</string>
+    <string name="mandra_aboker_line_label">المندره الي ابوقير</string>
+    <string name="mandra_mahta_line_label">المندره الي المحطه</string>
+    <string name="manshia_asfra_line_label">المنشيه الي العصافره</string>
+    <string name="manshia_mandra_line_label">المنشيه الي المندره</string>
+    <string name="manshia_victoria_line_label">المنشيه الي فيكتوريا</string>
+    <string name="username_value_text">ايهاب حمدي</string>
+    <string name="gps_hint_message">"من الضروري تشغيل خاصيه التتبع جي بي اس "</string>
+    <string name="line_subscription_activity_title">تتبع خط اخر</string>
+    <string name="line_subscription_confirmation_message">تم التاكيد</string>
+    <string name="tickets_loading_error_message">"يوجد خطا "</string>
+    <string name="stop_button_label">ايقاف</string>
+    <string name="line_subscription_confirmation_button_text">تاكيد تغيير الخط</string>
 </resources>

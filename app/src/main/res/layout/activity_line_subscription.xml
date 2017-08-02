@@ -45,7 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="Manshia : Asfra" />
+                    android:text="@string/manshia_asfra_line_label" />
 
                 <View
                     android:layout_width="match_parent"
@@ -57,7 +57,7 @@
                     android:id="@+id/radioManshiaVictoria"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Manshia : Victoria" />
+                    android:text="@string/manshia_victoria_line_label" />
 
                 <View
                     android:layout_width="match_parent"
@@ -69,7 +69,7 @@
                     android:id="@+id/radioManshiaMandra"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Manshia : Mandra" />
+                    android:text="@string/manshia_mandra_line_label" />
 
                 <View
                     android:layout_width="match_parent"
@@ -81,7 +81,7 @@
                     android:id="@+id/radioAsfraMahta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Asfra : Mahta" />
+                    android:text="@string/asfra_mahta_line_label" />
 
                 <View
                     android:layout_width="match_parent"
@@ -93,7 +93,7 @@
                     android:id="@+id/radioMandraMahta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Mandra : Mahta" />
+                    android:text="@string/mandra_mahta_line_label" />
 
                 <View
                     android:layout_width="match_parent"
@@ -105,7 +105,7 @@
                     android:id="@+id/radioMandraAboker"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Mandra : Aboker" />
+                    android:text="@string/mandra_aboker_line_label" />
             </RadioGroup>
 
             <Button
@@ -115,7 +115,7 @@
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:background="@null"
                 android:fontFamily="sans-serif"
-                android:text="Confirm your Change"
+                android:text="@string/line_subscription_confirmation_button_text"
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="16dp" />
@@ -142,7 +142,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="Changing you line subscription will make your vehicle to the passenger in your newly selected route" />
+            android:text="@string/line_subscription_hint_text" />
     </LinearLayout>
 
 

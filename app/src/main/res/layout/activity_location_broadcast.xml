@@ -37,7 +37,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/button_bg_red"
             android:fontFamily="sans-serif"
-            android:text="Stop"
+            android:text="@string/stop_button_label"
             android:textAllCaps="false"
             android:textSize="18dp" />
     </LinearLayout>

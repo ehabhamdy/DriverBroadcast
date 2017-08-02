@@ -26,4 +26,18 @@
     <string name="username_label">User Name</string>
     <string name="email_label">Email</string>
     <string name="current_line_label">Current Line</string>
+    <string name="manshia_asfra_line_label">Manshia : Asfra</string>
+    <string name="manshia_victoria_line_label">Manshia : Victoria</string>
+    <string name="manshia_mandra_line_label">Manshia : Mandra</string>
+    <string name="asfra_mahta_line_label">Asfra : Mahta</string>
+    <string name="mandra_mahta_line_label">Mandra : Mahta</string>
+    <string name="mandra_aboker_line_label">Mandra : Aboker</string>
+    <string name="line_subscription_hint_text">Changing you line subscription will make your vehicle appear to the passenger in your newly selected route</string>
+    <string name="username_value_text">Ehab Hamdy</string>
+    <string name="tickets_loading_error_message">Failed to load tickets.</string>
+    <string name="gps_hint_message">Enabling GPS is MANDATORY</string>
+    <string name="line_subscription_activity_title">Subscribe to line</string>
+    <string name="line_subscription_confirmation_message">Confirmed</string>
+    <string name="line_subscription_confirmation_button_text">Confirm your Change</string>
+    <string name="stop_button_label">Stop</string>
 </resources>
