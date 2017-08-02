@@ -44,7 +44,7 @@ public class ActivitySignUp extends ActivityBase {
     @BindView(R.id.busNumberEditText) EditText mBusNumberField;
     private ProgressDialog mProgressDialog;
 
-    String defaultLine = "Manshia : Asfra";
+    String defaultLine = getResources().getString(R.string.manshia_asfra_line_label);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +97,7 @@ public class ActivitySignUp extends ActivityBase {
                             FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification();
 
                         } else {
-                            Toast.makeText(getApplicationContext(), "Sign Up Failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), R.string.signup_error_message, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -128,7 +128,7 @@ public class ActivitySignUp extends ActivityBase {
         // Write new user
         writeNewUser(user.getUid(), username, email, busNumber);
 
-        Toast.makeText(getApplicationContext(), "Check your email inbox to verify your email and login here", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), R.string.signup_feedback_message, Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, ActivityLogin.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -179,7 +179,7 @@ public class ActivitySignUp extends ActivityBase {
                 ssid = connectionInfo.getSSID();
             }
         }else{
-            ssid = "SIM connection";
+            ssid = getString(R.string.connection_type_sim);
         }
         return ssid;
     }

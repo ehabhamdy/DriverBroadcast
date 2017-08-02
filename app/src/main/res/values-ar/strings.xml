@@ -38,4 +38,11 @@
     <string name="tickets_loading_error_message">"يوجد خطا "</string>
     <string name="stop_button_label">ايقاف</string>
     <string name="line_subscription_confirmation_button_text">تاكيد تغيير الخط</string>
+    <string name="account_not_verified_error_message">الحساب غير مفعل</string>
+    <string name="authentication_error_message">خطا في اسم المستخدم او كلمه المرور</string>
+    <string name="connection_failed_message">خطا في التصالا</string>
+    <string name="connection_type_sim">خط الهاتف</string>
+    <string name="notification_message_text">يتم الن ارس كناكملا</string>
+    <string name="signup_error_message">خطآ</string>
+    <string name="signup_feedback_message">من فضلك فعل الحساب من البريد الخاص بك</string>
 </resources>

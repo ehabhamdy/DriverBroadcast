@@ -67,7 +67,7 @@ public class ActivityLogin extends ActivityBase {
                     String p = mPasswordField.getText().toString();
                     login(e, p);
                 } else {
-                    Toast.makeText(ActivityLogin.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityLogin.this, R.string.connection_failed_message, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -102,11 +102,11 @@ public class ActivityLogin extends ActivityBase {
                         } else {
                             Log.w(TAG, "signInWithEmail", task.getException());
                             if (mAuth.getCurrentUser() != null && !mAuth.getCurrentUser().isEmailVerified()) {
-                                Toast.makeText(ActivityLogin.this, "Account is not verified \n   Authentication Failed!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ActivityLogin.this, R.string.account_not_verified_error_message, Toast.LENGTH_SHORT).show();
                                 FirebaseAuth.getInstance().signOut();
 
                             } else {
-                                Toast.makeText(ActivityLogin.this, "Email or Password is wrong \n    Authentication Failed!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ActivityLogin.this, R.string.authentication_error_message, Toast.LENGTH_SHORT).show();
                             }
                         }
 

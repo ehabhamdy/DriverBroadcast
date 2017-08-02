@@ -142,7 +142,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                 }
                 this.buildGoogleApiClient();
 
-                lineChannel = "awesome-channel";
+                lineChannel = getString(R.string.default_line_channel);
                 PNConfiguration pnConfiguration = new PNConfiguration();
                 pnConfiguration.setSubscribeKey(SUB_KEY);
                 pnConfiguration.setPublishKey(PUB_KEY);
@@ -275,7 +275,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                     }
                 });
                 //Setting up Navigation Drawer
-                email = "ehabhamdy2012@gmail.com";
+                email = getString(R.string.default_email);
                 //drawerUtil.SetupNavigationDrawer(mToolbar, this, username, email);
                 new DrawerBuilder().withActivity(this).withToolbar(mToolbar).build();
 
@@ -294,9 +294,9 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         Intent intent = new Intent(this, LocationBroadcastActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, BROADCAST_NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
-        builder.setContentTitle("Rakkebny");
-        builder.setContentText("Your are online and your location is being sent now");
-        builder.setSubText("Warning");
+        builder.setContentTitle(getString(R.string.app_name));
+        builder.setContentText(getString(R.string.notification_message_text));
+        builder.setSubText(getString(R.string.notification_subtext_text));
         builder.setNumber(101);
         builder.setContentIntent(pendingIntent);
         builder.setTicker("Fancy Notification");

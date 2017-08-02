@@ -40,4 +40,14 @@
     <string name="line_subscription_confirmation_message">Confirmed</string>
     <string name="line_subscription_confirmation_button_text">Confirm your Change</string>
     <string name="stop_button_label">Stop</string>
+    <string name="authentication_error_message">Email or Password is wrong      Authentication Failed!</string>
+    <string name="account_not_verified_error_message">Account is not verified     Authentication Failed!</string>
+    <string name="connection_failed_message">No Internet Connection</string>
+    <string name="signup_feedback_message">Check your email inbox to verify your email and login here</string>
+    <string name="connection_type_sim">SIM connection</string>
+    <string name="signup_error_message">Sign Up Failed</string>
+    <string name="default_line_channel" translatable="false">awesome-channel</string>
+    <string name="default_email" translatable="false">ehabhamdy2012@gmail.com</string>
+    <string name="notification_message_text">Your are online and your location is being sent now</string>
+    <string name="notification_subtext_text" translatable="false">Warning</string>
 </resources>
