@@ -10,13 +10,13 @@ android {
         }
     }
     compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.ehab.driverbroadcast"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.01"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "SUB_KEY", SUB_KEY)
         buildConfigField("String", "PUB_KEY", PUB_KEY)
