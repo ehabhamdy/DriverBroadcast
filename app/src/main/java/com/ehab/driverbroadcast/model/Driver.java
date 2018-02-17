@@ -16,6 +16,8 @@ public class Driver {
     public String line;
     public int freePlaces = 12;
     public String wifiName;
+    public String date;
+    public String time;
 
     public Driver() {
         // Default constructor required for calls to DataSnapshot.getValue(Driver.class)

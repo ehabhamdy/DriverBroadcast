@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -130,6 +131,11 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
         passengerMarkers = new HashMap<>();
         notificationManger = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("high", 50);
+        editor.commit();
+
         ////////////////////////////////////////////////////////////////
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -218,6 +224,7 @@ public class LocationBroadcastActivity extends AppCompatActivity implements Goog
                         email = user.email;
                         lineChannel = user.line;
                         busNumber = user.busNumber;
+
 
                         drawerUtil.SetupNavigationDrawer(mToolbar, LocationBroadcastActivity.this, user);
 

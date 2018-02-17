@@ -44,7 +44,7 @@ public class ActivitySignUp extends ActivityBase {
     @BindView(R.id.busNumberEditText) EditText mBusNumberField;
     private ProgressDialog mProgressDialog;
 
-    String defaultLine = getResources().getString(R.string.manshia_asfra_line_label);
+    String defaultLine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +62,7 @@ public class ActivitySignUp extends ActivityBase {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
+        defaultLine = getResources().getString(R.string.manshia_asfra_line_label);
 
 
         final Button signupBtn = (Button) findViewById(R.id.signupButton);

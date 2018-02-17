@@ -1,18 +1,15 @@
 package com.ehab.driverbroadcast.utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
 import com.ehab.driverbroadcast.R;
 import com.ehab.driverbroadcast.model.Driver;
 import com.ehab.driverbroadcast.ui.ActivityLogin;
-import com.ehab.driverbroadcast.ui.LineSubscriptionActivity;
-import com.ehab.driverbroadcast.ui.LocationBroadcastActivity;
 import com.ehab.driverbroadcast.ui.ProfileActivity;
+import com.ehab.driverbroadcast.ui.TodayReservationsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -33,7 +30,8 @@ public class NavigationDrawerUtil {
     AccountHeader headerResult;
 
     public static final String  SUB_LINE_EXTRA = "Line_Extra_Data";
-
+    public static final String DATE_EXTRA = "Extra_Date";
+    public static final String TIME_EXTRA = "Extra_Time";
     public static final String USERNAME_EXTRA = "Username_Data";
     public static final String EMAIL_EXTRA = "email_Data";
 
@@ -62,7 +60,7 @@ public class NavigationDrawerUtil {
 
         //if you want to update the items at a later time it is recommended to keep it in a variable
         PrimaryDrawerItem main = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.nav_main_label).withIcon(R.drawable.ic_room_black_24dp);
-        PrimaryDrawerItem subsToLine = new PrimaryDrawerItem().withIdentifier(2).withName(R.string.nav_subscribe_label).withIcon(R.drawable.ic_trending_up_black_24dp);
+        PrimaryDrawerItem todayReservations = new PrimaryDrawerItem().withIdentifier(2).withName(R.string.nav_reservations_label).withIcon(R.drawable.ic_trending_up_black_24dp);
         PrimaryDrawerItem profile = new PrimaryDrawerItem().withIdentifier(3).withName(R.string.nav_profile_label).withIcon(R.drawable.ic_person_black_24dp);
         PrimaryDrawerItem logout = new PrimaryDrawerItem().withIdentifier(5).withName(R.string.nav_logout_label).withIcon(R.drawable.ic_out_black_24dp);
         //create the drawer and remember the `Drawer` result object
@@ -72,7 +70,7 @@ public class NavigationDrawerUtil {
                 .addDrawerItems(
                         main,
                         new DividerDrawerItem(),
-                        subsToLine,
+                        todayReservations,
                         new DividerDrawerItem(),
                         profile,
                         new DividerDrawerItem(),
@@ -86,8 +84,9 @@ public class NavigationDrawerUtil {
                                 drawer.closeDrawer();
                                 return true;
                             case 3:
-                                Intent openSubscriptionIntent = new Intent(activity.getApplicationContext(), LineSubscriptionActivity.class);
-                                openSubscriptionIntent.putExtra(SUB_LINE_EXTRA, user.line);
+                                Intent openSubscriptionIntent = new Intent(activity.getApplicationContext(), TodayReservationsActivity.class);
+                                openSubscriptionIntent.putExtra(DATE_EXTRA, user.date);
+                                openSubscriptionIntent.putExtra(TIME_EXTRA, user.time);
                                 activity.startActivity(openSubscriptionIntent);
                                 drawer.closeDrawer();
                                 return true;

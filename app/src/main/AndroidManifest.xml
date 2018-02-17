@@ -20,13 +20,11 @@
             android:name=".ui.LocationBroadcastActivity"
             android:launchMode="singleTop"
             android:theme="@style/MainActivityTheme">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <!-- TODO: Add your Google Maps api key -->
         <meta-data
@@ -36,7 +34,8 @@
         <activity android:name=".ui.ProfileActivity" />
         <activity
             android:name=".ui.LineSubscriptionActivity"
-            android:parentActivityName=".ui.LocationBroadcastActivity"></activity>
+            android:parentActivityName=".ui.LocationBroadcastActivity" />
+        <activity android:name=".ui.TodayReservationsActivity" />
     </application>
 
 </manifest>
